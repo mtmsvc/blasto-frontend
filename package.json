@@ -12,7 +12,9 @@
     "format:check": "prettier --check .",
     "check:contrast": "node scripts/check-contrast.mjs",
     "mock-api": "node scripts/mock-api.mjs",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm run check:contrast"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run check:contrast",
+    "test": "npm run build && playwright test",
+    "test:only": "playwright test"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -25,6 +27,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

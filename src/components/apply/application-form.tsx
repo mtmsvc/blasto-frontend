@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { IconBubble } from "@/components/sections/icon-bubble";
 import { findCategory, type CategoryId } from "@/content/site";
@@ -16,6 +17,7 @@ import { fill } from "@/i18n/format";
 import type { Dictionary } from "@/dictionaries";
 import {
   emptyValues,
+  QUESTIONS_MAX_LENGTH,
   submitApplication,
   toPayload,
   validate,
@@ -162,6 +164,8 @@ export function ApplicationForm({
     email: `${id}-email`,
     trainingType: `${id}-training-type`,
     categoriesHint: `${id}-categories-hint`,
+    questions: `${id}-questions`,
+    questionsHint: `${id}-questions-hint`,
   };
   const errorId = (field: FieldName) => `${id}-${field}-error`;
   /** Joins ids for `aria-describedby`, skipping empty ones. */
@@ -324,6 +328,22 @@ export function ApplicationForm({
         </div>
         <FieldError id={errorId("categories")} message={errorFor("categories")} />
       </fieldset>
+
+      {/* Questions (optional, not sent yet: see SEND_QUESTIONS in application.ts) */}
+      <div className="flex flex-col gap-2">
+        <Label htmlFor={ids.questions}>{texts.form.questions}</Label>
+        <Textarea
+          id={ids.questions}
+          name="questions"
+          maxLength={QUESTIONS_MAX_LENGTH}
+          value={values.questions}
+          onChange={(e) => update("questions", e.target.value)}
+          aria-describedby={ids.questionsHint}
+        />
+        <p id={ids.questionsHint} className="text-sm text-muted-foreground">
+          {texts.form.questionsHint}
+        </p>
+      </div>
 
       {/* Server / network error */}
       {status.state === "error" && (

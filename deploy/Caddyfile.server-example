@@ -1,0 +1,27 @@
+# Add these blocks to the MAIN Caddyfile on the server (the Caddy that
+# already handles HTTPS for your other sites). Then reload Caddy.
+#
+# Caddy gets and renews the HTTPS certificate for blasto.lv by itself, as
+# soon as the domain's DNS points to this server.
+
+blasto.lv {
+	# The application form → your backend.
+	# Change the address to where the backend listens:
+	#   localhost:8000            (backend runs on the server itself)
+	#   blasto-backend:8000       (backend container on the same Docker network)
+	handle /applications {
+		reverse_proxy localhost:8000
+	}
+
+	# Everything else → the frontend container.
+	#   localhost:8080            (compose file as it is)
+	#   blasto-frontend:80        (Caddy in Docker, same network)
+	handle {
+		reverse_proxy localhost:8080
+	}
+}
+
+# www.blasto.lv → blasto.lv
+www.blasto.lv {
+	redir https://blasto.lv{uri} permanent
+}

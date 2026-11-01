@@ -506,7 +506,7 @@ const lv = {
     title: "Pieteikums apmācībai",
     text: "Tas aizņems mazāk nekā minūti. Pēc tam mēs piezvanīsim, lai vienotos par detaļām.",
     form: {
-      allRequired: "Visi lauki ir obligāti.",
+      allRequired: "Visi lauki, izņemot jautājumus, ir obligāti.",
       name: "Vārds, uzvārds",
       phone: "Tālrunis",
       phoneHint: "Piemēram, +371 20 000 000",
@@ -518,6 +518,8 @@ const lv = {
       inPersonHint: "Nodarbības mācību klasē Rīgā",
       categories: "Kategorijas",
       categoriesHint: "Vari izvēlēties vairākas.",
+      questions: "Jautājumi",
+      questionsHint: "Nav obligāti. Uzraksti, ja vēlies kaut ko pajautāt vai precizēt.",
       submit: "Nosūtīt pieteikumu",
       sending: "Sūta…",
       privacy:

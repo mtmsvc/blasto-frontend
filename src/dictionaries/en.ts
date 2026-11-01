@@ -471,7 +471,7 @@ const en: Dictionary = {
     title: "Apply for training",
     text: "It takes less than a minute. Then we will call you to agree on the details.",
     form: {
-      allRequired: "All fields are required.",
+      allRequired: "All fields except questions are required.",
       name: "Full name",
       phone: "Phone",
       phoneHint: "For example, +371 20 000 000",
@@ -483,6 +483,8 @@ const en: Dictionary = {
       inPersonHint: "Lessons in our classroom in Riga",
       categories: "Categories",
       categoriesHint: "You can choose more than one.",
+      questions: "Questions",
+      questionsHint: "Optional. Write here if you would like to ask or clarify something.",
       submit: "Send application",
       sending: "Sending…",
       privacy:

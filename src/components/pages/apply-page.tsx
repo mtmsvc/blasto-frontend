@@ -9,7 +9,7 @@ import {
   type ApplicationFormProps,
 } from "@/components/apply/application-form";
 import { PageHeader } from "@/components/sections/page-header";
-import { categories, phoneHref, site } from "@/content/site";
+import { applicationFormOrder, findCategory, phoneHref, site } from "@/content/site";
 import { pagePath } from "@/i18n/routes";
 import type { PageViewProps } from ".";
 
@@ -20,11 +20,14 @@ export function ApplyPage({ lang, dict }: PageViewProps) {
   // Only the texts the form needs are sent to the browser.
   const formProps: Omit<ApplicationFormProps, "initialCategory"> = {
     texts: { form: dict.apply.form, errors: dict.apply.errors, result: dict.apply.result },
-    categories: categories.map(({ id, label }) => ({
-      id,
-      label,
-      name: dict.courses.items[id].name,
-    })),
+    // In the order and with the labels of the form (see site.ts).
+    categories: applicationFormOrder.flatMap((id) => {
+      const category = findCategory(id);
+      if (!category) return [];
+      return [
+        { id, label: category.formLabel ?? category.label, name: dict.courses.items[id].name },
+      ];
+    }),
     privacyHref: pagePath(lang, "privacy"),
   };
 

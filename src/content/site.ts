@@ -80,6 +80,8 @@ export type Category = {
   id: CategoryId;
   /** Label shown on the site, e.g. "B" or "95". */
   label: string;
+  /** Label in the application form, if different (e.g. "A1/A2/A"). */
+  formLabel?: string;
   /** Age to start the course, and age to take the CSDD exams.
    *  `null` when not applicable. */
   startAge: number | null;
@@ -117,6 +119,7 @@ export const categories: Category[] = [
   {
     id: "a",
     label: "A",
+    formLabel: "A1/A2/A",
     startAge: 22,
     examAge: 24,
     requires: ["B"],
@@ -156,6 +159,13 @@ export const categories: Category[] = [
     prices: null,
   },
 ];
+
+/**
+ * Order of the checkboxes in the application form. Copied from the form on
+ * the previous blasto.lv, which listed B first and then A1/A2/A.
+ * (Elsewhere on the site, `categories` above sets the order.)
+ */
+export const applicationFormOrder: CategoryId[] = ["b", "a", "am", "be", "c", "ce", "d", "95"];
 
 /** Looks up a category by id, e.g. for the `?category=b` link on the
  *  application form. Returns `undefined` for unknown values. */

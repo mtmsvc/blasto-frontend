@@ -1,0 +1,27 @@
+# Runs the frontend container on the server.
+#
+# From the repository root:
+#   docker compose -f deploy/docker-compose.yml up -d --build
+#
+# The container is only reachable from the server itself (127.0.0.1:8080).
+# The main Caddy forwards blasto.lv to it (see Caddyfile.server-example).
+services:
+  blasto-frontend:
+    build:
+      context: ..
+      args:
+        NEXT_PUBLIC_SITE_URL: https://blasto.lv
+    image: blasto-frontend
+    container_name: blasto-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    # If your main Caddy also runs in Docker: remove `ports` above, uncomment
+    # the two `networks` blocks, use the name of Caddy's network, and in the
+    # Caddyfile use `reverse_proxy blasto-frontend:80`.
+    # networks:
+    #   - web
+
+# networks:
+#   web:
+#     external: true

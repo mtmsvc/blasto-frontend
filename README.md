@@ -83,43 +83,21 @@ NEXT_PUBLIC_SITE_URL=https://staging.blasto.lv npm run build
 
 ### Deploying
 
-Copy the contents of `out/` to your web server. The server should also:
+The production setup (Docker image + Caddy, for the Azure VM) is described
+step by step in **[deploy/README.md](deploy/README.md)**. In short:
 
-1. **Forward `POST /applications` to the backend** (the form needs it).
-2. **Serve `404.html`** for missing pages.
-3. Optionally **redirect `/` to `/lv/` with a 301** (the site already does this in the browser, but a real redirect is better for search engines).
-
-Example for **nginx**:
-
-```nginx
-server {
-    server_name blasto.lv;
-    root /var/www/blasto/out;
-
-    # 3. Real redirect for the root URL
-    location = / { return 301 /lv/; }
-
-    # 1. The application form → backend
-    location = /applications {
-        proxy_pass http://127.0.0.1:8000;   # your backend address
-    }
-
-    # Static files; "/lv/kontakti/" → "/lv/kontakti/index.html"
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    # 2. Custom 404 page
-    error_page 404 /404.html;
-
-    # Files in /_next/static/ have a hash in their name and never change
-    location /_next/static/ {
-        add_header Cache-Control "public, max-age=31536000, immutable";
-    }
-}
+```bash
+docker compose -f deploy/docker-compose.yml up -d --build
 ```
 
-On **Apache**, the equivalents are `ErrorDocument 404 /404.html`, `RedirectMatch 301 ^/$ /lv/` and a `ProxyPass /applications …` rule.
+builds the site into a small Caddy container that also handles the 404 page
+and the redirects from the old blasto.lv addresses
+(`deploy/redirects.caddy`). The server's main Caddy adds HTTPS and forwards
+`/applications` to the backend.
+
+Any other web server works too: serve the `out/` folder, forward
+`POST /applications` to the backend, use `404.html` for missing pages, and
+redirect `/` to `/lv/`.
 
 ---
 
@@ -188,6 +166,16 @@ public/
 scripts/
 ├── check-contrast.mjs          Verifies the colors meet WCAG AA
 └── mock-api.mjs                Fake backend for local testing
+
+tests/
+├── unit/                       Form logic (validation, the JSON that is sent)
+├── e2e/                        Browser tests: every page, form, theme, navigation, layout
+└── helpers.ts                  List of all page URLs, shared helpers
+
+deploy/                         Docker + Caddy setup for the server (see deploy/README.md)
+Dockerfile                      Builds the production image
+CLAUDE.md                       Rules and map of the project for AI assistants
+.github/workflows/ci.yml        Runs all checks and tests on GitHub on every push
 ```
 
 **Server vs Client Components.** Files without `"use client"` at the top run only at build time and become plain HTML. Only the interactive pieces (menu, theme switcher, form) are Client Components that ship JavaScript to the browser.
@@ -314,19 +302,41 @@ The `glass` class (defined in `globals.css`) gives an element a semi-transparent
 
    The phone number is sent without spaces. `training_type` is `"online"` or `"in_person"`.
 
+   The optional **Questions** field is shown but **not sent yet**: set
+   `SEND_QUESTIONS = true` in `application.ts` once the backend accepts a
+   `questions` field.
+
 3. **201** → thank-you message. Anything else → a readable error (bad data, too many requests, server error, no connection), plus the HTTP status code.
 
 The Apply buttons on the prices page link to `/lv/pieteikums/?category=b`, which ticks that category in advance.
 
 ---
 
-## Quality checks
+## Quality checks and tests
+
+Before every change is considered done, both must pass:
 
 ```bash
 npm run check
 ```
 
-This runs all of the following in one go:
+```bash
+npm test
+```
+
+`npm test` builds the site and runs about 150 automated browser tests:
+every page in every language loads without errors and with correct
+hreflang tags, nothing scrolls sideways on phones, the form validates and
+sends exactly the expected JSON, the theme switches without flash or
+jumps, and new pages open at the top. They take under a minute. (First
+time on a new computer: `npx playwright install chromium`.) To re-run the
+tests without rebuilding: `npm run test:only`.
+
+The same checks run automatically on GitHub for every push
+(`.github/workflows/ci.yml`), together with a test build of the Docker
+image.
+
+`npm run check` runs all of the following in one go:
 
 | Command                  | What it checks                                         |
 | ------------------------ | ------------------------------------------------------ |
@@ -355,6 +365,15 @@ Every such spot is marked with `TODO(content)`. To list them:
 ```bash
 grep -rn "TODO(content)" src
 ```
+
+---
+
+## Working with an AI assistant
+
+`CLAUDE.md` describes the project's rules, the map of files and step-by-step
+recipes. Claude Code reads it automatically at the start of every session,
+so a new session knows where things are and to run `npm run check` and
+`npm test` before finishing. Keep it up to date when the structure changes.
 
 ---
 
