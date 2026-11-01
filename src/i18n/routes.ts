@@ -1,3 +1,4 @@
+import { categoryIds, type CategoryId } from "@/content/site";
 import { locales, type Locale } from "./config";
 
 /**
@@ -61,6 +62,23 @@ export function pagePathsByLocale(page: PageKey): Record<Locale, string> {
   >;
 }
 
+/**
+ * Each licence category has its own page under the courses page:
+ *   categoryPath("lv", "b") → "/lv/kategorijas/b/"
+ *   categoryPath("ru", "95") → "/ru/kategorii/95/"
+ */
+export function categoryPath(lang: Locale, id: CategoryId): string {
+  return `${pagePath(lang, "courses")}${id}/`;
+}
+
+/** The same category page in every language (for hreflang tags). */
+export function categoryPathsByLocale(id: CategoryId): Record<Locale, string> {
+  return Object.fromEntries(locales.map((lang) => [lang, categoryPath(lang, id)])) as Record<
+    Locale,
+    string
+  >;
+}
+
 /** Finds which page a slug belongs to: ("ru", "kategorii") → "courses". */
 export function pageFromSlug(lang: Locale, slug: string): PageKey | undefined {
   return (Object.keys(pages) as PageKey[]).find((page) => pages[page][lang] === slug);
@@ -69,14 +87,20 @@ export function pageFromSlug(lang: Locale, slug: string): PageKey | undefined {
 /**
  * The URL of the current page in another language. Used by the language
  * switcher, which only knows the current URL:
- *   switchLocaleInPath("/lv/kategorijas/", "ru") → "/ru/kategorii/"
+ *   switchLocaleInPath("/lv/kategorijas/", "ru")   → "/ru/kategorii/"
+ *   switchLocaleInPath("/lv/kategorijas/b/", "en") → "/en/courses/b/"
  * Unknown paths fall back to the other language's home page.
  */
 export function switchLocaleInPath(pathname: string, lang: Locale): string {
-  const [, currentLang = "", slug = ""] = pathname.split("/"); // "/lv/kontakti/" → ["", "lv", "kontakti", ""]
+  // "/lv/kategorijas/b/" → ["", "lv", "kategorijas", "b", ""]
+  const [, currentLang = "", slug = "", sub = ""] = pathname.split("/");
   const current = (locales as readonly string[]).includes(currentLang)
     ? (currentLang as Locale)
     : undefined;
   const page = current ? pageFromSlug(current, slug) : undefined;
+  // A category page: keep the category, translate the rest.
+  if (page === "courses" && (categoryIds as readonly string[]).includes(sub)) {
+    return categoryPath(lang, sub as CategoryId);
+  }
   return pagePath(lang, page ?? "home");
 }

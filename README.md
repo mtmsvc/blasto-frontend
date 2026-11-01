@@ -131,7 +131,7 @@ src/
 │   ├── [lang]/                 Everything under /lv/, /ru/, /en/
 │   │   ├── layout.tsx          <html>, header, footer, theme script (wraps every page)
 │   │   ├── page.tsx            Home page
-│   │   └── [slug]/page.tsx     Every other page (/lv/kontakti/, /ru/kontakty/…)
+│   │   └── [...path]/page.tsx  Every other page (/lv/kontakti/, /lv/kategorijas/b/…)
 │   ├── (redirect)/             The "/" page that redirects to /lv/
 │   ├── global-not-found.tsx    404 page (in all three languages)
 │   ├── globals.css             Design tokens (colors), glass effect, base styles
@@ -155,7 +155,8 @@ src/
 │   ├── ui/                     shadcn/ui building blocks (Button, Card, Checkbox…)
 │   ├── layout/                 Header, footer, menus, language & theme switchers
 │   ├── sections/               Reusable page parts (page title, call-to-action…)
-│   ├── pages/                  One component per page + index.ts (the list)
+│   ├── pages/                  One component per page + index.ts (the list),
+│   │                           category-page.tsx for /lv/kategorijas/b/ etc.
 │   ├── home/                   Sections of the home page
 │   ├── courses/, teachers/     Cards and blocks for those pages
 │   ├── legal/                  Layout for long documents (privacy, rules)
@@ -271,7 +272,7 @@ The component is copied into `src/components/ui/`, where you can read and change
 
 Every page lives under `src/app/[lang]/`. `[lang]` is a _dynamic segment_: `generateStaticParams()` in `src/app/[lang]/layout.tsx` tells Next.js to build the site three times, for `lv`, `ru` and `en`.
 
-Page addresses are translated (`/lv/kontakti/`, `/ru/kontakty/`, `/en/contacts/`). Folder names in `src/app` cannot differ per language, so all pages except the home page go through one dynamic route, `src/app/[lang]/[slug]/page.tsx`. It looks up which page the slug belongs to (`src/i18n/routes.ts`) and renders that page's component from `src/components/pages/`. Each page loads its texts with `getDictionary(lang)`.
+Page addresses are translated (`/lv/kontakti/`, `/ru/kontakty/`, `/en/contacts/`). Folder names in `src/app` cannot differ per language, so all pages except the home page go through one _catch-all_ route, `src/app/[lang]/[...path]/page.tsx`. It looks up which page the address belongs to (`src/i18n/routes.ts`) and renders that page's component from `src/components/pages/`. Category pages (`/lv/kategorijas/b/`) go through the same route and use `category-page.tsx`. Each page loads its texts with `getDictionary(lang)`.
 
 The language switcher links to the same page in another language, translating the address. Each page has `<link rel="alternate" hreflang="…">` tags (built in `src/lib/metadata.ts`), so search engines know the three versions belong together.
 

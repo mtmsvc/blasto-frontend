@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { categories } from "@/content/site";
-import { pagePath } from "@/i18n/routes";
+import { categoryPath, pagePath } from "@/i18n/routes";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/dictionaries";
 
@@ -52,7 +52,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             {categories.map((category) => (
               <li key={category.id}>
                 <Link
-                  href={`${coursesPath}#category-${category.id}`}
+                  href={categoryPath(lang, category.id)}
                   className="grid aspect-square place-items-center rounded-2xl bg-secondary text-lg font-semibold text-secondary-foreground transition-colors hover:bg-pastel focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 >
                   {category.label}

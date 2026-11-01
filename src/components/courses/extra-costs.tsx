@@ -45,7 +45,7 @@ export function ExtraCosts({ lang, texts }: { lang: Locale; texts: Texts }) {
   ];
 
   return (
-    <section aria-labelledby="extras-title" className="mt-24">
+    <section id="extras" aria-labelledby="extras-title" className="mt-24 scroll-mt-28">
       <Container>
         <h2 id="extras-title" className="text-2xl font-semibold tracking-tight">
           {texts.title}

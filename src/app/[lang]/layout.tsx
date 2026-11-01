@@ -4,6 +4,7 @@ import "../globals.css";
 import { BackgroundDecor } from "@/components/layout/background-decor";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ScrollToTop } from "@/components/layout/scroll-to-top";
 import { getDictionary } from "@/dictionaries";
 import { locales } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
@@ -51,7 +52,10 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
   return (
     // The theme script changes the `class` of <html> before React loads;
     // `suppressHydrationWarning` tells React that this difference is expected.
-    <html lang={lang} suppressHydrationWarning>
+    // `data-scroll-behavior="smooth"` tells Next.js to switch off the smooth
+    // scrolling from globals.css during page changes, so pages never
+    // visibly slide.
+    <html lang={lang} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         {/* Must run before the page is painted, to avoid a flash of the
             wrong theme. See src/lib/theme.ts. */}
@@ -71,6 +75,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
           {children}
         </main>
         <SiteFooter lang={lang} dict={dict} />
+        <ScrollToTop />
       </body>
     </html>
   );

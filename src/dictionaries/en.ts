@@ -18,6 +18,7 @@ const en: Dictionary = {
     closeMenu: "Close menu",
     menu: "Menu",
     language: "Language",
+    breadcrumb: "Breadcrumb",
     theme: {
       label: "Colour theme",
       light: "Light",
@@ -154,6 +155,8 @@ const en: Dictionary = {
     priceOnRequest: "Price on request",
     apply: "Apply",
     applyFor: "Apply for category {category}",
+    more: "Details",
+    moreAbout: "More about category {category}",
     items: {
       b: {
         name: "Car",
@@ -243,6 +246,176 @@ const en: Dictionary = {
             "Yes. Your licence will then have the code B (78), which allows you to drive only cars with an automatic gearbox.",
         },
       ],
+    },
+  },
+
+  categoryPages: {
+    sections: {
+      requirements: "Requirements",
+      theory: "Theory",
+      practice: "Driving",
+      exams: "Exams",
+    },
+    costs: "Costs",
+    total: "Total, minimum",
+    totalNote: "Plus: first aid course, medical certificate and CSDD state fees.",
+    extrasLink: "See additional costs",
+    otherCategories: "Other categories",
+    items: {
+      b: {
+        title: "Category B",
+        intro:
+          "Category B lets you drive cars with a total weight up to 3,500 kg and no more than 8 seats (not counting the driver).",
+        requirements: [
+          "You can start the training at 16 and take the CSDD exams from 18.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "11 theory lessons, in person or online (11 × 5 study hours).",
+          "At the end, the school theory exam: 30 questions, 1 mistake allowed. Then the CSDD theory exam.",
+        ],
+        practice: [
+          "Before driving, you need a learner permit from CSDD.",
+          "The minimum is 20 academic hours, that is 10 lessons of 90 minutes. At the end, the school driving exam.",
+        ],
+        exams: [
+          "CSDD theory exam: 30 questions, 3 mistakes allowed.",
+          "The driving exam is taken in a manual car. You can also take it in an automatic, but then your licence will have the code B (78), and you may only drive cars with an automatic gearbox.",
+        ],
+      },
+      be: {
+        title: "Category BE",
+        intro:
+          "Category BE lets you drive a category B car with a trailer or semi-trailer weighing up to 3,500 kg.",
+        requirements: [
+          "You must be at least 18 and hold category B.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: ["4 theory lessons. No theory exam, neither at school nor at CSDD."],
+        practice: [
+          "The minimum is 8 academic hours, that is 4 lessons of 90 minutes: manoeuvres on the training ground and driving in traffic. At the end, the school driving exam.",
+        ],
+        exams: [
+          "Only the CSDD driving exam, in a car with a trailer. After it, you get category BE.",
+        ],
+      },
+      am: {
+        title: "Category AM",
+        intro:
+          "Category AM lets you ride mopeds with an engine up to 50 cm³ and a top speed up to 45 km/h.",
+        requirements: [
+          "You can start the training and take the CSDD exams from 14.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "For category AM, training at a driving school is optional, but it helps you feel confident. We offer 3 to 11 theory lessons.",
+          "There is no school theory exam: after the course you go straight to the CSDD theory exam.",
+        ],
+        practice: [
+          "Before riding, you need a learner permit from CSDD.",
+          "The course includes 10 academic hours, that is 5 lessons of 90 minutes: manoeuvres on the training ground and riding in traffic.",
+        ],
+        exams: [
+          "CSDD theory exam: 20 questions, including 2 video questions, 2 mistakes allowed.",
+          "Riding exam: manoeuvres on the training ground and riding in traffic. It is held from 1 April to 1 October. You need protective gear: helmet, protectors, clothing and gloves.",
+        ],
+      },
+      a: {
+        title: "Category A",
+        intro:
+          "Category A lets you ride motorcycles from 50 cm³ and faster than 45 km/h, with or without a sidecar. It also covers category A1 and A2 motorcycles.",
+        requirements: [
+          "You can start the training at 22 if you already hold category B. The CSDD exams can be taken from 24.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "With category B, 3 theory lessons are enough (15 study hours). At the end, the school theory exam, then the CSDD theory exam.",
+        ],
+        practice: [
+          "The minimum is 10 academic hours, that is 5 lessons of 90 minutes: manoeuvres on the training ground and riding in traffic. At the end, the school riding exam.",
+        ],
+        exams: [
+          "CSDD theory exam: 30 questions, 3 mistakes allowed.",
+          "Riding exam: manoeuvres on the training ground and riding in traffic, from 1 April to 1 October. You need protective gear: helmet, protectors, clothing and gloves.",
+          "If you have held category A2 for at least 2 years, you only take the CSDD riding exam for category A.",
+        ],
+      },
+      c: {
+        title: "Category C",
+        intro:
+          "Category C lets you drive trucks with a total weight over 3,500 kg and no more than 8 passenger seats, including with a trailer up to 750 kg.",
+        requirements: [
+          "You can start the training at 19 if you already hold category B. The CSDD exams can be taken from 21.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "6 to 10 theory lessons, depending on which categories you already have.",
+          "At the end, the school theory exam: 35 questions, 1 mistake allowed. Then the CSDD theory exam.",
+        ],
+        practice: [
+          "The course includes 10 to 20 academic hours, depending on your experience. At the end, the school driving exam.",
+        ],
+        exams: [
+          "CSDD theory exam: 35 questions, 3 mistakes allowed. Driving exam: manoeuvres on the training ground and driving in traffic.",
+          "To carry goods commercially, you also need code 95.",
+        ],
+      },
+      ce: {
+        title: "Category CE",
+        intro:
+          "Category CE lets you drive a category C truck with a trailer weighing more than 750 kg. Professional freight drivers need it.",
+        requirements: [
+          "You must be at least 21 and hold category C.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "5 theory lessons (25 study hours). No theory exam, neither at school nor at CSDD.",
+        ],
+        practice: [
+          "The minimum is 14 academic hours, that is 7 lessons of 90 minutes. At the end, the school driving exam.",
+        ],
+        exams: [
+          "Only the CSDD driving exam, in a truck with a trailer.",
+          "To carry goods commercially, you also need code 95.",
+        ],
+      },
+      d: {
+        title: "Category D",
+        intro:
+          "Category D lets you drive buses with more than 8 seats (not counting the driver), including with a trailer up to 750 kg.",
+        requirements: [
+          "You can start the training at 22 if you already hold category C1, D1 or C. The CSDD exams can be taken from 24.",
+          "You need a medical certificate and a first aid course. You can get both at our school.",
+        ],
+        theory: [
+          "6 to 8 theory lessons, depending on which categories you already have.",
+          "At the end, the school theory exam: 35 questions, 1 mistake allowed. Then the CSDD theory exam.",
+        ],
+        practice: [
+          "The course includes 12 to 20 academic hours, depending on your experience. At the end, the school driving exam.",
+        ],
+        exams: [
+          "CSDD theory exam: 35 questions, 3 mistakes allowed. Driving exam: manoeuvres on the training ground and driving in traffic.",
+          "To carry passengers commercially, you also need code 95.",
+        ],
+      },
+      "95": {
+        title: "Code 95",
+        intro:
+          "Code 95 is a mark on the driving licence that confirms your professional qualification. You need it to carry goods or passengers commercially.",
+        requirements: [
+          "You need category C1, C, C1E, CE, D1, D, D1E or DE and a medical certificate.",
+        ],
+        theory: [
+          "5 theory lessons (5 × 7 study hours). New drivers take a school theory exam at the end: 45 questions, 1 mistake allowed.",
+          "If you already have code 95, you need the periodic training every 5 years (35 hours). After it, we issue a certificate.",
+        ],
+        practice: ["No extra driving lessons are needed for code 95."],
+        exams: [
+          "At CSDD you take theory exams on traffic rules (35 questions, 3 mistakes allowed) and on professional topics (45 questions, 5 mistakes allowed).",
+          "Practical exam: questions about the vehicle and securing cargo, manoeuvres on the training ground, and at least 90 minutes of driving in traffic.",
+        ],
+      },
     },
   },
 

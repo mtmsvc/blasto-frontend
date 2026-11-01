@@ -3,16 +3,18 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { fill, formatList, formatPrice } from "@/i18n/format";
-import { pagePath } from "@/i18n/routes";
+import { fill, formatList } from "@/i18n/format";
+import { categoryPath, pagePath } from "@/i18n/routes";
+import { categoryPriceRows } from "./category-prices";
 import type { Category } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/dictionaries";
 
 /**
  * One licence category: what it allows, age and requirements, prices, and
- * an Apply button. The button opens the form with this category already
- * ticked (e.g. /lv/pieteikums/?category=b).
+ * two buttons: "More" opens the category page (e.g. /lv/kategorijas/b/),
+ * "Apply" opens the form with this category already ticked
+ * (e.g. /lv/pieteikums/?category=b).
  */
 export function CategoryCard({
   category,
@@ -26,6 +28,7 @@ export function CategoryCard({
   const texts = dict.courses;
   const { name, text } = texts.items[category.id];
   const { startAge, examAge, requires, prices } = category;
+  const detailsPath = categoryPath(lang, category.id);
 
   // "16+" when the course and the exam have the same age limit,
   // otherwise "training 16+, exam 18+".
@@ -36,22 +39,7 @@ export function CategoryCard({
         ? `${startAge}+`
         : fill(texts.ageRange, { start: startAge, exam: examAge });
 
-  // Rows of the price list. A row is left out when it does not apply.
-  const priceRows: { label: string; value: string }[] = prices
-    ? [
-        { label: texts.documents, value: formatPrice(prices.documents, lang) },
-        { label: texts.theory, value: formatPrice(prices.theory, lang) },
-        { label: texts.drivingHour, value: formatPrice(prices.drivingHour, lang) },
-        ...(prices.minDrivingHours
-          ? [
-              {
-                label: fill(texts.minDriving, { hours: prices.minDrivingHours }),
-                value: formatPrice(prices.minDrivingHours * prices.drivingHour, lang),
-              },
-            ]
-          : []),
-      ]
-    : [];
+  const priceRows = categoryPriceRows(category, lang, texts);
 
   return (
     // `id` lets other pages link straight to this card: …/kategorijas/#category-b
@@ -61,7 +49,11 @@ export function CategoryCard({
       </span>
 
       <div>
-        <h2 className="text-lg font-semibold">{name}</h2>
+        <h2 className="text-lg font-semibold">
+          <Link href={detailsPath} className="hover:underline hover:underline-offset-4">
+            {name}
+          </Link>
+        </h2>
         <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{text}</p>
       </div>
 
@@ -96,14 +88,21 @@ export function CategoryCard({
         )}
       </dl>
 
-      <Button asChild variant="secondary" className="w-full">
-        <Link
-          href={`${pagePath(lang, "apply")}?category=${category.id}`}
-          aria-label={fill(texts.applyFor, { category: category.label })}
-        >
-          {texts.apply}
-        </Link>
-      </Button>
+      <div className="grid grid-cols-2 gap-2">
+        <Button asChild variant="outline" size="sm" className="h-10">
+          <Link href={detailsPath} aria-label={fill(texts.moreAbout, { category: category.label })}>
+            {texts.more}
+          </Link>
+        </Button>
+        <Button asChild variant="secondary" size="sm" className="h-10">
+          <Link
+            href={`${pagePath(lang, "apply")}?category=${category.id}`}
+            aria-label={fill(texts.applyFor, { category: category.label })}
+          >
+            {texts.apply}
+          </Link>
+        </Button>
+      </div>
     </Card>
   );
 }

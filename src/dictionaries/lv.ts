@@ -15,6 +15,15 @@
 import type { CategoryId } from "@/content/site";
 
 type CategoryText = { name: string; text: string };
+/** Texts of one category page. Each list item is a paragraph. */
+type CategoryPageText = {
+  title: string;
+  intro: string;
+  requirements: string[];
+  theory: string[];
+  practice: string[];
+  exams: string[];
+};
 /** A section of a legal document: a heading plus paragraphs and/or a list. */
 export type DocumentSection = { title: string; paragraphs?: string[]; items?: string[] };
 
@@ -31,6 +40,7 @@ const lv = {
     closeMenu: "Aizvērt izvēlni",
     menu: "Izvēlne",
     language: "Valoda",
+    breadcrumb: "Navigācijas ceļš",
     theme: {
       label: "Krāsu tēma",
       light: "Gaišā",
@@ -173,6 +183,8 @@ const lv = {
     priceOnRequest: "Cena pēc pieprasījuma",
     apply: "Pieteikties",
     applyFor: "Pieteikties {category} kategorijai",
+    more: "Vairāk",
+    moreAbout: "Vairāk par {category} kategoriju",
     items: {
       b: {
         name: "Vieglais automobilis",
@@ -263,6 +275,181 @@ const lv = {
         },
       ],
     },
+  },
+
+  // One page per category: /lv/kategorijas/b/ and so on.
+  // Source: the category pages of the old blasto.lv.
+  categoryPages: {
+    sections: {
+      requirements: "Prasības",
+      theory: "Teorija",
+      practice: "Braukšana",
+      exams: "Eksāmeni",
+    },
+    costs: "Izmaksas",
+    total: "Kopā, minimums",
+    totalNote: "Papildus: pirmās palīdzības kurss, medicīniskā izziņa un CSDD valsts nodevas.",
+    extrasLink: "Skatīt papildu izmaksas",
+    otherCategories: "Citas kategorijas",
+    items: {
+      b: {
+        title: "B kategorija",
+        intro:
+          "B kategorija ļauj vadīt automobiļus, kuru pilnā masa nepārsniedz 3500 kg un kuros ir ne vairāk kā 8 sēdvietas (neskaitot vadītāja vietu).",
+        requirements: [
+          "Mācības autoskolā var sākt no 16 gadu vecuma, bet CSDD eksāmenus kārtot no 18 gadiem.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "11 teorijas nodarbības klātienē vai tiešsaistē (11 × 5 mācību stundas).",
+          "Kursa beigās skolas teorijas eksāmens: 30 jautājumi, atļauta 1 kļūda. Pēc tam CSDD teorijas eksāmens.",
+        ],
+        practice: [
+          "Pirms braukšanas jāsaņem CSDD mācību braukšanas atļauja.",
+          "Minimums ir 20 akadēmiskās stundas jeb 10 nodarbības pa 90 minūtēm. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "CSDD teorijas eksāmens: 30 jautājumi, atļautas 3 kļūdas.",
+          "Braukšanas eksāmenu kārto ar mehānisko pārnesumkārbu. To var kārtot arī ar automātisko, bet tad apliecībā būs atzīme B (78), un drīkstēsi vadīt tikai automobiļus ar automātisko pārnesumkārbu.",
+        ],
+      },
+      be: {
+        title: "BE kategorija",
+        intro:
+          "BE kategorija ļauj vadīt B kategorijas automobili ar piekabi vai puspiekabi, kuras pilnā masa nepārsniedz 3500 kg.",
+        requirements: [
+          "Jābūt vismaz 18 gadu vecam un ar B kategoriju.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        // TODO(content): the old site says both "4 lessons" and "3 × 5 hours".
+        theory: ["4 teorijas nodarbības. Teorijas eksāmens nav jākārto ne skolā, ne CSDD."],
+        practice: [
+          "Minimums ir 8 akadēmiskās stundas jeb 4 nodarbības pa 90 minūtēm: figūras laukumā un braukšana satiksmē. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "Jākārto tikai CSDD braukšanas eksāmens, ar automobili ar piekabi. Pēc tā saņemsi BE kategoriju.",
+        ],
+      },
+      am: {
+        title: "AM kategorija",
+        intro:
+          "AM kategorija ļauj vadīt mopēdus, kuru motora tilpums nepārsniedz 50 cm³ un maksimālais ātrums nepārsniedz 45 km/h.",
+        requirements: [
+          "Mācības un CSDD eksāmenus var sākt no 14 gadu vecuma.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "AM kategorijai mācības autoskolā nav obligātas, bet tās palīdz justies droši. Piedāvājam no 3 līdz 11 teorijas nodarbībām.",
+          "Skolas teorijas eksāmens nav jākārto: pēc kursa uzreiz kārto CSDD teorijas eksāmenu.",
+        ],
+        practice: [
+          "Pirms braukšanas jāsaņem CSDD mācību braukšanas atļauja.",
+          "Kursa programma paredz 10 akadēmiskās stundas jeb 5 nodarbības pa 90 minūtēm: figūras laukumā un braukšana satiksmē.",
+        ],
+        exams: [
+          "CSDD teorijas eksāmens: 20 jautājumi, no tiem 2 video jautājumi, atļautas 2 kļūdas.",
+          "Braukšanas eksāmens: figūras laukumā un braukšana satiksmē. To kārto no 1. aprīļa līdz 1. oktobrim. Vajadzīgs aizsargekipējums: ķivere, aizsargi, apģērbs un cimdi.",
+        ],
+      },
+      a: {
+        title: "A kategorija",
+        intro:
+          "A kategorija ļauj vadīt motociklus ar motora tilpumu no 50 cm³ un ātrumu virs 45 km/h, ar blakusvāģi vai bez tā. Ar to drīkst vadīt arī A1 un A2 kategorijas motociklus.",
+        requirements: [
+          "Mācības var sākt no 22 gadu vecuma, ja jau ir B kategorija. CSDD eksāmenus var kārtot no 24 gadiem.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "Ar B kategoriju pietiek ar 3 teorijas nodarbībām (15 mācību stundas). Kursa beigās skolas teorijas eksāmens, pēc tam CSDD teorijas eksāmens.",
+        ],
+        practice: [
+          "Minimums ir 10 akadēmiskās stundas jeb 5 nodarbības pa 90 minūtēm: figūras laukumā un braukšana satiksmē. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "CSDD teorijas eksāmens: 30 jautājumi, atļautas 3 kļūdas.",
+          "Braukšanas eksāmens: figūras laukumā un braukšana satiksmē, no 1. aprīļa līdz 1. oktobrim. Vajadzīgs aizsargekipējums: ķivere, aizsargi, apģērbs un cimdi.",
+          "Ja A2 kategorija ir vismaz 2 gadus, A kategorijai CSDD jākārto tikai braukšanas eksāmens.",
+        ],
+      },
+      c: {
+        title: "C kategorija",
+        intro:
+          "C kategorija ļauj vadīt kravas automobiļus, kuru pilnā masa pārsniedz 3500 kg un kuros ir ne vairāk kā 8 pasažieru vietas, arī ar piekabi līdz 750 kg.",
+        requirements: [
+          "Mācības var sākt no 19 gadu vecuma, ja jau ir B kategorija. CSDD eksāmenus var kārtot no 21 gada vecuma.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "No 6 līdz 10 teorijas nodarbībām, atkarībā no tā, kādas kategorijas tev jau ir.",
+          "Kursa beigās skolas teorijas eksāmens: 35 jautājumi, atļauta 1 kļūda. Pēc tam CSDD teorijas eksāmens.",
+        ],
+        // TODO(content): the old site says "10 to 20 hours" here, but a
+        // minimum of 20 in the prices.
+        practice: [
+          "Kursa programma paredz no 10 līdz 20 akadēmiskajām stundām, atkarībā no iepriekšējās pieredzes. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "CSDD teorijas eksāmens: 35 jautājumi, atļautas 3 kļūdas. Braukšanas eksāmens: figūras laukumā un braukšana satiksmē.",
+          "Lai pārvadātu kravas komerciāli, papildus vajadzīgs 95. kods.",
+        ],
+      },
+      ce: {
+        title: "CE kategorija",
+        intro:
+          "CE kategorija ļauj vadīt C kategorijas vilcēju ar piekabi, kuras pilnā masa pārsniedz 750 kg. Tā vajadzīga profesionāliem kravu pārvadājumu vadītājiem.",
+        requirements: [
+          "Jābūt vismaz 21 gadu vecam un ar C kategoriju.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "5 teorijas nodarbības (25 mācību stundas). Teorijas eksāmens nav jākārto ne skolā, ne CSDD.",
+        ],
+        practice: [
+          "Minimums ir 14 akadēmiskās stundas jeb 7 nodarbības pa 90 minūtēm. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "Jākārto tikai CSDD braukšanas eksāmens, ar kravas automobili ar piekabi.",
+          "Lai pārvadātu kravas komerciāli, papildus vajadzīgs 95. kods.",
+        ],
+      },
+      d: {
+        title: "D kategorija",
+        intro:
+          "D kategorija ļauj vadīt autobusus, kuros ir vairāk nekā 8 sēdvietas (neskaitot vadītāja vietu), arī ar piekabi līdz 750 kg.",
+        requirements: [
+          "Mācības var sākt no 22 gadu vecuma, ja jau ir C1, D1 vai C kategorija. CSDD eksāmenus var kārtot no 24 gadiem.",
+          "Nepieciešama medicīniskā izziņa un pirmās palīdzības kurss. Abus var nokārtot mūsu autoskolā.",
+        ],
+        theory: [
+          "No 6 līdz 8 teorijas nodarbībām, atkarībā no tā, kādas kategorijas tev jau ir.",
+          "Kursa beigās skolas teorijas eksāmens: 35 jautājumi, atļauta 1 kļūda. Pēc tam CSDD teorijas eksāmens.",
+        ],
+        practice: [
+          "Kursa programma paredz no 12 līdz 20 akadēmiskajām stundām, atkarībā no iepriekšējās pieredzes. Kursa beigās skolas braukšanas eksāmens.",
+        ],
+        exams: [
+          "CSDD teorijas eksāmens: 35 jautājumi, atļautas 3 kļūdas. Braukšanas eksāmens: figūras laukumā un braukšana satiksmē.",
+          "Lai pārvadātu pasažierus komerciāli, papildus vajadzīgs 95. kods.",
+        ],
+      },
+      "95": {
+        title: "95. kods",
+        intro:
+          "95. kods ir atzīme vadītāja apliecībā, kas apliecina profesionālo kvalifikāciju. Tas vajadzīgs komerciāliem kravu un pasažieru pārvadājumiem.",
+        requirements: [
+          "Jābūt C1, C, C1E, CE, D1, D, D1E vai DE kategorijai un medicīniskajai izziņai.",
+        ],
+        theory: [
+          "5 teorijas nodarbības (5 × 7 mācību stundas). Jaunajiem vadītājiem kursa beigās skolas teorijas eksāmens: 45 jautājumi, atļauta 1 kļūda.",
+          "Ja 95. kods jau ir, ik pēc 5 gadiem jāiziet periodiskā apmācība (35 stundas). Pēc tās izsniedzam sertifikātu.",
+        ],
+        practice: ["Papildu braukšanas nodarbības 95. kodam nav vajadzīgas."],
+        exams: [
+          "CSDD jākārto teorijas eksāmens ceļu satiksmes noteikumos (35 jautājumi, atļautas 3 kļūdas) un profesionālajos jautājumos (45 jautājumi, atļautas 5 kļūdas).",
+          "Praktiskais eksāmens: jautājumi par transportlīdzekli un kravas stiprināšanu, figūras laukumā un vismaz 90 minūšu brauciens satiksmē.",
+        ],
+      },
+    } satisfies Record<CategoryId, CategoryPageText>,
   },
 
   teachers: {

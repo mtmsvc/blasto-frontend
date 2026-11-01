@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { defaultLocale, locales, openGraphLocales, type Locale } from "@/i18n/config";
-import { pagePath, pagePathsByLocale, type PageKey } from "@/i18n/routes";
+import { pagePathsByLocale, type PageKey } from "@/i18n/routes";
 import { site } from "@/content/site";
 
 /**
@@ -25,15 +25,20 @@ import { site } from "@/content/site";
 export function pageMetadata({
   lang,
   page,
+  paths,
   title,
   description,
 }: {
   lang: Locale;
   page: PageKey;
+  /** The page's URL in every language, when it is not a plain page from
+   *  `pages` (e.g. a category page). Defaults to the URLs of `page`. */
+  paths?: Record<Locale, string>;
   title: string;
   description: string;
 }): Metadata {
-  const url = pagePath(lang, page);
+  const urls = paths ?? pagePathsByLocale(page);
+  const url = urls[lang];
   // The home page shows its title as is; other pages get " · Blasto" added
   // by the title template in the layout.
   const isHome = page === "home";
@@ -43,10 +48,7 @@ export function pageMetadata({
     description,
     alternates: {
       canonical: url,
-      languages: {
-        ...pagePathsByLocale(page),
-        "x-default": pagePath(defaultLocale, page),
-      },
+      languages: { ...urls, "x-default": urls[defaultLocale] },
     },
     openGraph: {
       type: "website",

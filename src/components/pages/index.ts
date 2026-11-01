@@ -3,8 +3,9 @@
  *
  * Why pages live here and not in folders under src/app: the URLs are
  * translated (/lv/kontakti/, /ru/kontakty/, /en/contacts/), so a single
- * route, src/app/[lang]/[slug]/page.tsx, receives all of them, finds which
- * page the slug belongs to, and renders the component registered below.
+ * route, src/app/[lang]/[...path]/page.tsx, receives all of them, finds
+ * which page the address belongs to, and renders the component registered
+ * below. Category pages (/lv/kategorijas/b/) use category-page.tsx.
  */
 
 import type { Dictionary } from "@/dictionaries";
