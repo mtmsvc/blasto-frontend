@@ -4,7 +4,7 @@ import { locales, type Locale } from "./config";
 /**
  * All pages of the site and their URL in each language.
  *
- *   courses → /lv/kategorijas/  /ru/kategorii/  /en/courses/
+ *   courses → /lv/kategorijas/  /ru/kategorii/  /en/categories/
  *
  * The home page has an empty slug: /lv/, /ru/, /en/.
  *
@@ -19,7 +19,7 @@ import { locales, type Locale } from "./config";
  */
 export const pages = {
   home: { lv: "", ru: "", en: "" },
-  courses: { lv: "kategorijas", ru: "kategorii", en: "courses" },
+  courses: { lv: "kategorijas", ru: "kategorii", en: "categories" },
   teachers: { lv: "pasniedzeji", ru: "prepodavateli", en: "teachers" },
   contacts: { lv: "kontakti", ru: "kontakty", en: "contacts" },
   apply: { lv: "pieteikums", ru: "zayavka", en: "apply" },
@@ -53,7 +53,7 @@ export function pagePath(lang: Locale, page: PageKey): string {
 
 /**
  * The same page in every language, for hreflang tags and the sitemap.
- *   { lv: "/lv/kategorijas/", ru: "/ru/kategorii/", en: "/en/courses/" }
+ *   { lv: "/lv/kategorijas/", ru: "/ru/kategorii/", en: "/en/categories/" }
  */
 export function pagePathsByLocale(page: PageKey): Record<Locale, string> {
   return Object.fromEntries(locales.map((lang) => [lang, pagePath(lang, page)])) as Record<
@@ -88,7 +88,7 @@ export function pageFromSlug(lang: Locale, slug: string): PageKey | undefined {
  * The URL of the current page in another language. Used by the language
  * switcher, which only knows the current URL:
  *   switchLocaleInPath("/lv/kategorijas/", "ru")   → "/ru/kategorii/"
- *   switchLocaleInPath("/lv/kategorijas/b/", "en") → "/en/courses/b/"
+ *   switchLocaleInPath("/lv/kategorijas/b/", "en") → "/en/categories/b/"
  * Unknown paths fall back to the other language's home page.
  */
 export function switchLocaleInPath(pathname: string, lang: Locale): string {
