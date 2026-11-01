@@ -11,6 +11,18 @@ export const APPLICATIONS_ENDPOINT = "/applications";
 /** How long to wait for the server before showing a network error. */
 const TIMEOUT_MS = 15_000;
 
+/**
+ * The optional "Questions" field.
+ *
+ * The backend does not accept it yet, so for now it is shown in the form
+ * but NOT sent. When the backend is ready:
+ *   1. set SEND_QUESTIONS to true,
+ *   2. make sure the backend field is called `questions` (or rename it in
+ *      `ApplicationPayload` and `toPayload` below).
+ */
+export const SEND_QUESTIONS = false;
+export const QUESTIONS_MAX_LENGTH = 1000;
+
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
 /* ------------------------------------------------------------------ */
@@ -26,6 +38,8 @@ export type ApplicationPayload = {
   phone: string;
   email: string;
   training_type: TrainingType;
+  /** Only sent when SEND_QUESTIONS is true and the visitor wrote something. */
+  questions?: string;
 } & Record<`cat_${CategoryId}`, boolean>;
 
 /** What the form holds while the visitor is filling it in. */
@@ -35,6 +49,8 @@ export type FormValues = {
   email: string;
   trainingType: TrainingType | "";
   categories: Record<CategoryId, boolean>;
+  /** Optional free text. Not validated. */
+  questions: string;
 };
 
 /** Which fields can show an error. */
@@ -61,7 +77,7 @@ export function emptyValues(preselected?: CategoryId): FormValues {
   const categories = Object.fromEntries(
     categoryIds.map((id) => [id, id === preselected]),
   ) as Record<CategoryId, boolean>;
-  return { name: "", phone: "", email: "", trainingType: "", categories };
+  return { name: "", phone: "", email: "", trainingType: "", categories, questions: "" };
 }
 
 /** "+371 20-000 000" → "+37120000000" (keeps digits and a leading +). */
@@ -108,7 +124,7 @@ export function toPayload(values: FormValues): ApplicationPayload {
     categoryIds.map((id) => [`cat_${id}`, values.categories[id]]),
   ) as Record<`cat_${CategoryId}`, boolean>;
 
-  return {
+  const payload: ApplicationPayload = {
     name: values.name.trim(),
     phone: normalizePhone(values.phone),
     email: values.email.trim(),
@@ -116,6 +132,11 @@ export function toPayload(values: FormValues): ApplicationPayload {
     training_type: values.trainingType as TrainingType,
     ...categoryFlags,
   };
+
+  const questions = values.questions.trim();
+  if (SEND_QUESTIONS && questions) payload.questions = questions;
+
+  return payload;
 }
 
 /* ------------------------------------------------------------------ */

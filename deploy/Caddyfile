@@ -1,0 +1,39 @@
+# Caddy configuration INSIDE the frontend container.
+#
+# It only serves the built site on plain HTTP port 80. The domain, HTTPS
+# certificates and the /applications backend are handled by the main Caddy
+# on the server (see deploy/Caddyfile.server-example and deploy/README.md).
+{
+	auto_https off
+	admin off
+}
+
+:80 {
+	root * /srv
+	encode zstd gzip
+
+	# The root URL goes to the Latvian home page.
+	redir / /lv/ permanent
+
+	# Addresses of the previous blasto.lv → new pages (keeps old links and
+	# Google results working).
+	import /etc/caddy/redirects.caddy
+
+	# Files in /_next/static/ have a hash in their name and never change,
+	# so browsers may keep them for a year.
+	@immutable path /_next/static/*
+	header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+	# Serves "/lv/kontakti/" from "/srv/lv/kontakti/index.html", and adds the
+	# missing "/" to "/lv/kontakti" automatically.
+	file_server
+
+	# Missing pages show the site's own 404 page.
+	handle_errors {
+		@notFound expression {err.status_code} == 404
+		handle @notFound {
+			rewrite * /404.html
+			file_server
+		}
+	}
+}

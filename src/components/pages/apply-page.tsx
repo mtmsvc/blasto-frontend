@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import type { Metadata } from "next";
 import { PhoneIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -10,30 +9,26 @@ import {
   type ApplicationFormProps,
 } from "@/components/apply/application-form";
 import { PageHeader } from "@/components/sections/page-header";
-import { categories, phoneHref, site } from "@/content/site";
-import { getDictionary } from "@/dictionaries";
-import { getLocale } from "@/i18n/params";
-import { pageMetadata } from "@/lib/metadata";
-
-export async function generateMetadata({ params }: PageProps<"/[lang]/apply">): Promise<Metadata> {
-  const lang = await getLocale(params);
-  return pageMetadata({ lang, page: "apply", ...getDictionary(lang).apply.meta });
-}
+import { applicationFormOrder, findCategory, phoneHref, site } from "@/content/site";
+import { pagePath } from "@/i18n/routes";
+import type { PageViewProps } from ".";
 
 /** Application page: the form, plus "what happens next" on the side. */
-export default async function ApplyPage({ params }: PageProps<"/[lang]/apply">) {
-  const lang = await getLocale(params);
-  const dict = getDictionary(lang);
+export function ApplyPage({ lang, dict }: PageViewProps) {
   const { aside } = dict.apply;
 
   // Only the texts the form needs are sent to the browser.
   const formProps: Omit<ApplicationFormProps, "initialCategory"> = {
     texts: { form: dict.apply.form, errors: dict.apply.errors, result: dict.apply.result },
-    categories: categories.map(({ id, label }) => ({
-      id,
-      label,
-      name: dict.courses.items[id].name,
-    })),
+    // In the order and with the labels of the form (see site.ts).
+    categories: applicationFormOrder.flatMap((id) => {
+      const category = findCategory(id);
+      if (!category) return [];
+      return [
+        { id, label: category.formLabel ?? category.label, name: dict.courses.items[id].name },
+      ];
+    }),
+    privacyHref: pagePath(lang, "privacy"),
   };
 
   return (

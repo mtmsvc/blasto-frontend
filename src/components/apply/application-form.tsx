@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CircleAlertIcon, CircleCheckIcon, LoaderCircleIcon } from "lucide-react";
 
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { IconBubble } from "@/components/sections/icon-bubble";
 import { findCategory, type CategoryId } from "@/content/site";
@@ -15,6 +17,7 @@ import { fill } from "@/i18n/format";
 import type { Dictionary } from "@/dictionaries";
 import {
   emptyValues,
+  QUESTIONS_MAX_LENGTH,
   submitApplication,
   toPayload,
   validate,
@@ -34,6 +37,8 @@ export type ApplicationFormProps = {
   categories: { id: CategoryId; label: string; name: string }[];
   /** A category to tick in advance (from a "?category=b" link). */
   initialCategory?: CategoryId;
+  /** Link to the privacy policy, shown under the Send button. */
+  privacyHref: string;
 };
 
 type Status =
@@ -61,7 +66,12 @@ const FIELD_ORDER: FieldName[] = ["name", "phone", "email", "trainingType", "cat
  *    focus. Otherwise the data is sent and a success or error message is
  *    shown.
  */
-export function ApplicationForm({ texts, categories, initialCategory }: ApplicationFormProps) {
+export function ApplicationForm({
+  texts,
+  categories,
+  initialCategory,
+  privacyHref,
+}: ApplicationFormProps) {
   const id = useId(); // unique prefix for the ids that link labels and fields
   const [values, setValues] = useState<FormValues>(() => emptyValues(initialCategory));
   const [showErrors, setShowErrors] = useState(false);
@@ -154,6 +164,8 @@ export function ApplicationForm({ texts, categories, initialCategory }: Applicat
     email: `${id}-email`,
     trainingType: `${id}-training-type`,
     categoriesHint: `${id}-categories-hint`,
+    questions: `${id}-questions`,
+    questionsHint: `${id}-questions-hint`,
   };
   const errorId = (field: FieldName) => `${id}-${field}-error`;
   /** Joins ids for `aria-describedby`, skipping empty ones. */
@@ -317,6 +329,22 @@ export function ApplicationForm({ texts, categories, initialCategory }: Applicat
         <FieldError id={errorId("categories")} message={errorFor("categories")} />
       </fieldset>
 
+      {/* Questions (optional, not sent yet: see SEND_QUESTIONS in application.ts) */}
+      <div className="flex flex-col gap-2">
+        <Label htmlFor={ids.questions}>{texts.form.questions}</Label>
+        <Textarea
+          id={ids.questions}
+          name="questions"
+          maxLength={QUESTIONS_MAX_LENGTH}
+          value={values.questions}
+          onChange={(e) => update("questions", e.target.value)}
+          aria-describedby={ids.questionsHint}
+        />
+        <p id={ids.questionsHint} className="text-sm text-muted-foreground">
+          {texts.form.questionsHint}
+        </p>
+      </div>
+
       {/* Server / network error */}
       {status.state === "error" && (
         <div
@@ -347,7 +375,12 @@ export function ApplicationForm({ texts, categories, initialCategory }: Applicat
             {showErrors && hasErrors ? texts.errors.summary : ""}
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">{texts.form.privacy}</p>
+        <p className="text-sm text-muted-foreground">
+          {texts.form.privacy}{" "}
+          <Link href={privacyHref} className="prose-link text-foreground">
+            {texts.form.privacyLink}
+          </Link>
+        </p>
       </div>
     </form>
   );

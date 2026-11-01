@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,8 @@ import type { Dictionary } from "@/dictionaries";
 
 /**
  * Theme menu: Light / Dark / Same as device.
- * The logic (saving the choice, following the device) is in src/lib/theme.ts.
+ * The logic (saving the choice, following the device, the circle animation)
+ * is in src/lib/theme.ts.
  */
 export function ThemeToggle({ labels }: { labels: Dictionary["common"]["theme"] }) {
   // Reads the saved choice and re-renders when it changes. During the build
@@ -33,6 +34,15 @@ export function ThemeToggle({ labels }: { labels: Dictionary["common"]["theme"] 
     () => "system" as const,
   );
 
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  /** Applies the choice; the new theme grows as a circle from the button. */
+  function choose(value: ThemePreference) {
+    const rect = buttonRef.current?.getBoundingClientRect();
+    const origin = rect && { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    setThemePreference(value, origin);
+  }
+
   const options: { value: ThemePreference; label: string; Icon: typeof SunIcon }[] = [
     { value: "light", label: labels.light, Icon: SunIcon },
     { value: "dark", label: labels.dark, Icon: MoonIcon },
@@ -40,9 +50,18 @@ export function ThemeToggle({ labels }: { labels: Dictionary["common"]["theme"] 
   ];
 
   return (
-    <DropdownMenu>
+    // `modal={false}`: the page stays scrollable while the menu is open, so
+    // nothing behind it shifts (a modal menu hides the scrollbar, which
+    // moves the page sideways on computers with visible scrollbars).
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={labels.label} title={labels.label}>
+        <Button
+          ref={buttonRef}
+          variant="ghost"
+          size="icon"
+          aria-label={labels.label}
+          title={labels.label}
+        >
           {/* The icon follows the *actual* theme via CSS, so it is right even
               before JavaScript loads. */}
           <SunIcon className="size-5 dark:hidden" aria-hidden />
@@ -53,7 +72,7 @@ export function ThemeToggle({ labels }: { labels: Dictionary["common"]["theme"] 
         <DropdownMenuLabel>{labels.label}</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={preference}
-          onValueChange={(value) => setThemePreference(value as ThemePreference)}
+          onValueChange={(value) => choose(value as ThemePreference)}
         >
           {options.map(({ value, label, Icon }) => (
             <DropdownMenuRadioItem key={value} value={value}>

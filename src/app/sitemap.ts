@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
 
-import { locales } from "@/i18n/config";
-import { pagePath, pagePathsByLocale, pages, type PageKey } from "@/i18n/routes";
-import { site } from "@/content/site";
+import { locales, type Locale } from "@/i18n/config";
+import { categoryPathsByLocale, pagePathsByLocale, pages, type PageKey } from "@/i18n/routes";
+import { categoryIds, site } from "@/content/site";
 
 // Generate the file once at build time (required for a static export).
 export const dynamic = "force-static";
@@ -11,14 +11,17 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   const absolute = (path: string) => new URL(path, site.url).toString();
 
-  return (Object.keys(pages) as PageKey[]).flatMap((page) =>
+  // One entry per language for a page that exists in all three languages.
+  const entries = (paths: Record<Locale, string>) =>
     locales.map((lang) => ({
-      url: absolute(pagePath(lang, page)),
+      url: absolute(paths[lang]),
       alternates: {
-        languages: Object.fromEntries(
-          Object.entries(pagePathsByLocale(page)).map(([l, path]) => [l, absolute(path)]),
-        ),
+        languages: Object.fromEntries(locales.map((other) => [other, absolute(paths[other])])),
       },
-    })),
-  );
+    }));
+
+  return [
+    ...(Object.keys(pages) as PageKey[]).flatMap((page) => entries(pagePathsByLocale(page))),
+    ...categoryIds.flatMap((id) => entries(categoryPathsByLocale(id))),
+  ];
 }

@@ -1,0 +1,45 @@
+# Old blasto.lv addresses → new addresses (301 = moved permanently).
+# Format: redir <old path> <new path> permanent
+# A "*" at the end also matches the old address with or without a "/" at the
+# end. Addresses that are the same on both sites (/ru/kategorii/,
+# /ru/kontakty/) need no line.
+
+# Latvian
+redir /par-mums*                     /lv/                              permanent
+redir /kategorijas*                  /lv/kategorijas/                  permanent
+redir /b-kategorija*                 /lv/kategorijas/b/                permanent
+redir /be-kategorija*                /lv/kategorijas/be/               permanent
+redir /a-kategorija*                 /lv/kategorijas/a/                permanent
+redir /am-kategorija*                /lv/kategorijas/am/               permanent
+redir /c-kategorija*                 /lv/kategorijas/c/                permanent
+redir /ce-de-kategorija*             /lv/kategorijas/ce/               permanent
+redir /d-kategorija*                 /lv/kategorijas/d/                permanent
+redir /95-kods*                      /lv/kategorijas/95/               permanent
+redir /grupas*                       /lv/kategorijas/                  permanent
+redir /pirmas-palidzibas-kursi*      /lv/kategorijas/                  permanent
+redir /pasniedzeji*                  /lv/pasniedzeji/                  permanent
+redir /instruktori*                  /lv/pasniedzeji/                  permanent
+redir /kontakti*                     /lv/kontakti/                     permanent
+redir /ieksejas-kartibas-noteikumi*  /lv/ieksejas-kartibas-noteikumi/  permanent
+redir /konfidencialitates-politika*  /lv/privatuma-politika/           permanent
+redir /sikdatnu-politika*            /lv/privatuma-politika/           permanent
+
+# Russian
+redir /ru/avtoshkola-blasto*         /ru/                              permanent
+redir /ru/o-nas*                     /ru/                              permanent
+# B and A need exact matches, so they do not also catch BE and AM.
+@ruB path /ru/kategoriya-b /ru/kategoriya-b/
+redir @ruB                           /ru/kategorii/b/                  permanent
+redir /ru/kategoriya-be*             /ru/kategorii/be/                 permanent
+redir /ru/kategoriya-am*             /ru/kategorii/am/                 permanent
+@ruA path /ru/kategoriya-a /ru/kategoriya-a/
+redir @ruA                           /ru/kategorii/a/                  permanent
+redir /ru/kategoriya-s*              /ru/kategorii/c/                  permanent
+redir /ru/kategoriya-ce-de*          /ru/kategorii/ce/                 permanent
+redir /ru/kategoriya-d*              /ru/kategorii/d/                  permanent
+redir /ru/95-kod*                    /ru/kategorii/95/                 permanent
+redir /ru/gruppy*                    /ru/kategorii/                    permanent
+redir /ru/kursy-pervoj-pomoshhi*     /ru/kategorii/                    permanent
+redir /ru/uchitelya*                 /ru/prepodavateli/                permanent
+redir /ru/instruktory*               /ru/prepodavateli/                permanent
+redir /ru/blasto-komanda*            /ru/prepodavateli/                permanent

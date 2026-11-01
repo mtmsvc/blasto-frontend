@@ -2,7 +2,7 @@ import {
   BadgeEuroIcon,
   CalendarCheckIcon,
   HeartHandshakeIcon,
-  MonitorSmartphoneIcon,
+  LanguagesIcon,
   type LucideIcon,
 } from "lucide-react";
 
@@ -16,7 +16,7 @@ type BenefitKey = keyof Dictionary["home"]["benefits"]["items"];
 const benefitIcons: Record<BenefitKey, LucideIcon> = {
   instructors: HeartHandshakeIcon,
   schedule: CalendarCheckIcon,
-  online: MonitorSmartphoneIcon,
+  languages: LanguagesIcon,
   prices: BadgeEuroIcon,
 };
 

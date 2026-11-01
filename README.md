@@ -6,8 +6,8 @@ The website of the Blasto driving school, in Latvian, Russian and English.
 - **Tailwind CSS 4** for styling, **shadcn/ui** for the interactive components (menu, dropdown, form controls).
 - Light and dark theme, three languages, an application form that POSTs JSON to `/applications`.
 
-> ⚠️ **The content is sample data.** Prices, contacts, teachers and some texts are placeholders.
-> See [Placeholder content](#placeholder-content) before going live.
+> ⚠️ **Some content still needs checking.** Prices, contacts and texts come from the previous blasto.lv, but the teachers are samples and a few facts need confirming.
+> See [Content to check](#content-to-check) before going live.
 
 ---
 
@@ -60,9 +60,10 @@ out/
 ├── index.html          → "/" (redirects to /lv/)
 ├── 404.html            → "page not found" page
 ├── lv/index.html       → /lv/
-├── lv/courses/index.html
-├── ru/…, en/…
-├── sitemap.xml, robots.txt, icon.svg
+├── lv/kategorijas/index.html
+├── ru/kategorii/index.html, en/courses/index.html …
+├── sitemap.xml, robots.txt, manifest.webmanifest
+├── icon.svg, apple-icon.png, icons/, og-image.png
 └── _next/…             → CSS and JavaScript
 ```
 
@@ -82,43 +83,21 @@ NEXT_PUBLIC_SITE_URL=https://staging.blasto.lv npm run build
 
 ### Deploying
 
-Copy the contents of `out/` to your web server. The server should also:
+The production setup (Docker image + Caddy, for the Azure VM) is described
+step by step in **[deploy/README.md](deploy/README.md)**. In short:
 
-1. **Forward `POST /applications` to the backend** (the form needs it).
-2. **Serve `404.html`** for missing pages.
-3. Optionally **redirect `/` to `/lv/` with a 301** (the site already does this in the browser, but a real redirect is better for search engines).
-
-Example for **nginx**:
-
-```nginx
-server {
-    server_name blasto.lv;
-    root /var/www/blasto/out;
-
-    # 3. Real redirect for the root URL
-    location = / { return 301 /lv/; }
-
-    # 1. The application form → backend
-    location = /applications {
-        proxy_pass http://127.0.0.1:8000;   # your backend address
-    }
-
-    # Static files; "/lv/courses/" → "/lv/courses/index.html"
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    # 2. Custom 404 page
-    error_page 404 /404.html;
-
-    # Files in /_next/static/ have a hash in their name and never change
-    location /_next/static/ {
-        add_header Cache-Control "public, max-age=31536000, immutable";
-    }
-}
+```bash
+docker compose -f deploy/docker-compose.yml up -d --build
 ```
 
-On **Apache**, the equivalents are `ErrorDocument 404 /404.html`, `RedirectMatch 301 ^/$ /lv/` and a `ProxyPass /applications …` rule.
+builds the site into a small Caddy container that also handles the 404 page
+and the redirects from the old blasto.lv addresses
+(`deploy/redirects.caddy`). The server's main Caddy adds HTTPS and forwards
+`/applications` to the backend.
+
+Any other web server works too: serve the `out/` folder, forward
+`POST /applications` to the backend, use `404.html` for missing pages, and
+redirect `/` to `/lv/`.
 
 ---
 
@@ -130,15 +109,14 @@ src/
 │   ├── [lang]/                 Everything under /lv/, /ru/, /en/
 │   │   ├── layout.tsx          <html>, header, footer, theme script (wraps every page)
 │   │   ├── page.tsx            Home page
-│   │   ├── courses/page.tsx    Courses & prices
-│   │   ├── teachers/page.tsx   Teachers
-│   │   ├── contacts/page.tsx   Contacts
-│   │   └── apply/page.tsx      Application form
+│   │   └── [...path]/page.tsx  Every other page (/lv/kontakti/, /lv/kategorijas/b/…)
 │   ├── (redirect)/             The "/" page that redirects to /lv/
 │   ├── global-not-found.tsx    404 page (in all three languages)
 │   ├── globals.css             Design tokens (colors), glass effect, base styles
 │   ├── sitemap.ts, robots.ts   Generated sitemap.xml and robots.txt
-│   └── icon.svg                Favicon
+│   ├── manifest.ts             Home-screen icon settings for phones
+│   ├── icon.svg                Favicon (the "B")
+│   └── apple-icon.png          iPhone home-screen icon
 │
 ├── dictionaries/               ALL TEXTS. One file per language.
 │   ├── lv.ts                   Latvian (defines the structure)
@@ -146,27 +124,32 @@ src/
 │   ├── en.ts                   English
 │   └── index.ts                getDictionary(lang)
 │
-├── content/site.ts             Facts that are the same in every language:
-│                               contacts, prices, categories, teachers
+├── content/
+│   ├── site.ts                 Facts that are the same in every language:
+│   │                           contacts, prices, categories, teachers, reviews
+│   └── legal/rules-lv.ts       The school's internal rules (Latvian only)
 │
 ├── components/
 │   ├── ui/                     shadcn/ui building blocks (Button, Card, Checkbox…)
 │   ├── layout/                 Header, footer, menus, language & theme switchers
 │   ├── sections/               Reusable page parts (page title, call-to-action…)
+│   ├── pages/                  One component per page + index.ts (the list),
+│   │                           category-page.tsx for /lv/kategorijas/b/ etc.
 │   ├── home/                   Sections of the home page
-│   ├── courses/, teachers/     Cards for those pages
+│   ├── courses/, teachers/     Cards and blocks for those pages
+│   ├── legal/                  Layout for long documents (privacy, rules)
 │   └── apply/
 │       ├── application.ts      Form data, validation and sending (no React)
 │       └── application-form.tsx The form itself
 │
 ├── i18n/                       Language helpers
 │   ├── config.ts               List of languages
-│   ├── routes.ts               List of pages and URL helpers
+│   ├── routes.ts               List of pages, their URL in each language
 │   ├── params.ts               Reads the language from the URL
-│   └── format.ts               Price formatting, {placeholder} filling
+│   └── format.ts               Prices, "A, B or C" lists, {placeholder} filling
 │
 └── lib/
-    ├── theme.ts                Light/dark logic + the no-flash script
+    ├── theme.ts                Light/dark logic, no-flash script, switch animation
     ├── metadata.ts             <title>, description, canonical, hreflang
     └── utils.ts                cn() helper for class names
 
@@ -175,9 +158,24 @@ brand/                          Logo files for print, social media, documents
 ├── blasto-logo-on-dark.svg     Wordmark on the dark forest-green background
 └── blasto-logo-upright.svg     Alternative with a smaller slant (8° instead of 14°)
 
+public/
+├── icons/                      Android home-screen icons
+├── og-image.png                Link-preview picture (WhatsApp, Facebook…)
+└── teachers/                   Teacher photos (WebP)
+
 scripts/
 ├── check-contrast.mjs          Verifies the colors meet WCAG AA
 └── mock-api.mjs                Fake backend for local testing
+
+tests/
+├── unit/                       Form logic (validation, the JSON that is sent)
+├── e2e/                        Browser tests: every page, form, theme, navigation, layout
+└── helpers.ts                  List of all page URLs, shared helpers
+
+deploy/                         Docker + Caddy setup for the server (see deploy/README.md)
+Dockerfile                      Builds the production image
+CLAUDE.md                       Rules and map of the project for AI assistants
+.github/workflows/ci.yml        Runs all checks and tests on GitHub on every push
 ```
 
 **Server vs Client Components.** Files without `"use client"` at the top run only at build time and become plain HTML. Only the interactive pieces (menu, theme switcher, form) are Client Components that ship JavaScript to the browser.
@@ -192,7 +190,23 @@ Open `src/dictionaries/lv.ts` (and `ru.ts`, `en.ts`), find the text, edit it. Al
 
 ### Change prices, contacts or opening hours
 
-Edit `src/content/site.ts`. Prices are numbers in euros and are formatted per language automatically (`120 €` in Latvian, `€120` in English).
+Edit `src/content/site.ts`. Prices are numbers in euros and are formatted per language automatically (`22,50 €` in Latvian, `€22.50` in English). Each category has:
+
+- `documents`, `theory`: one-off prices;
+- `drivingHour`: one academic hour (45 min) of driving;
+- `minDrivingHours`: the minimum number of hours. The card shows the minimum driving cost, calculated from these two. Use `null` when there is no minimum;
+- `prices: null` shows "price on request".
+
+The first aid course, the medical certificate and the CSDD state fees are in `extraServices` and `csddFees` in the same file. The opening hours are text, in the dictionaries under `contacts.hoursLines`.
+
+### Update the reviews
+
+The quotes and the Google rating are at the bottom of `src/content/site.ts`. Copy reviews word for word from Google, in their original language, and set `lang` to that language. Update `count` from time to time.
+
+### Edit the legal documents
+
+- **Privacy policy:** in each dictionary under `legal.privacy`. `{email}`, `{phone}` and similar are filled in from `site.ts`.
+- **Internal rules:** `src/content/legal/rules-lv.ts`, Latvian only. The Russian and English pages show the same text with a note (`legal.rulesNote`). If you later have translations, give them their own files and pick one by language in `src/components/pages/rules-page.tsx`.
 
 ### Add or edit a teacher
 
@@ -204,11 +218,15 @@ Edit `src/content/site.ts`. Prices are numbers in euros and are formatted per la
 
 ### Add a page
 
-1. Add it to `pages` in `src/i18n/routes.ts` (and to `menuPages` if it belongs in the menu).
-2. Create `src/app/[lang]/<name>/page.tsx`; copy `teachers/page.tsx` as a starting point.
-3. Add its menu label under `nav`, plus its texts, in every dictionary.
+1. Add it to `pages` in `src/i18n/routes.ts`, with its URL in each language (and to `menuPages` if it belongs in the menu).
+2. Create its component in `src/components/pages/` (copy `teachers-page.tsx` as a starting point) and register it in `src/components/pages/index.ts`.
+3. Add its menu label under `nav`, plus its texts and `meta`, in every dictionary.
 
-It is automatically included in the sitemap and gets hreflang tags.
+It is automatically built in every language, included in the sitemap and gets hreflang tags.
+
+### Change a page address
+
+Edit its slug in `pages` in `src/i18n/routes.ts`. If the site is already live, also add a 301 redirect from the old address on the web server, so old links and Google keep working.
 
 ### Change colors
 
@@ -240,13 +258,19 @@ The component is copied into `src/components/ui/`, where you can read and change
 
 ### Languages
 
-Every page lives under `src/app/[lang]/`. `[lang]` is a _dynamic segment_: `generateStaticParams()` in `src/app/[lang]/layout.tsx` tells Next.js to build each page three times, for `lv`, `ru` and `en`. Each page reads the language from the URL and loads its texts with `getDictionary(lang)`.
+Every page lives under `src/app/[lang]/`. `[lang]` is a _dynamic segment_: `generateStaticParams()` in `src/app/[lang]/layout.tsx` tells Next.js to build the site three times, for `lv`, `ru` and `en`.
 
-The language switcher links to the same page in another language. Each page has `<link rel="alternate" hreflang="…">` tags (built in `src/lib/metadata.ts`), so search engines know the three versions belong together.
+Page addresses are translated (`/lv/kontakti/`, `/ru/kontakty/`, `/en/contacts/`). Folder names in `src/app` cannot differ per language, so all pages except the home page go through one _catch-all_ route, `src/app/[lang]/[...path]/page.tsx`. It looks up which page the address belongs to (`src/i18n/routes.ts`) and renders that page's component from `src/components/pages/`. Category pages (`/lv/kategorijas/b/`) go through the same route and use `category-page.tsx`. Each page loads its texts with `getDictionary(lang)`.
+
+The language switcher links to the same page in another language, translating the address. Each page has `<link rel="alternate" hreflang="…">` tags (built in `src/lib/metadata.ts`), so search engines know the three versions belong together.
 
 ### Theme without flash
 
 The HTML is built in advance, so it cannot know whether the visitor chose dark mode. A tiny script in `<head>` (`themeScript` in `src/lib/theme.ts`) runs _before the page is painted_: it reads the saved choice from `localStorage` (or the device setting) and adds the `dark` class to `<html>`. The CSS for `.dark` swaps the color tokens.
+
+### Theme switch animation
+
+When someone picks a theme in the menu, the new colors spread as a circle from the theme button. This uses the browser's View Transitions API: the browser takes a picture of the page, applies the new theme, and our code animates a growing circle (`clip-path`) over it. The graphics card does the work and nothing is re-rendered, so it is light even on old phones. Browsers without the feature, and visitors with "reduce motion" turned on, get an instant switch. All in `setThemePreference()` in `src/lib/theme.ts`.
 
 ### Glass effect
 
@@ -278,19 +302,41 @@ The `glass` class (defined in `globals.css`) gives an element a semi-transparent
 
    The phone number is sent without spaces. `training_type` is `"online"` or `"in_person"`.
 
+   The optional **Questions** field is shown but **not sent yet**: set
+   `SEND_QUESTIONS = true` in `application.ts` once the backend accepts a
+   `questions` field.
+
 3. **201** → thank-you message. Anything else → a readable error (bad data, too many requests, server error, no connection), plus the HTTP status code.
 
-The Apply buttons on the prices page link to `/lv/apply/?category=b`, which ticks that category in advance.
+The Apply buttons on the prices page link to `/lv/pieteikums/?category=b`, which ticks that category in advance.
 
 ---
 
-## Quality checks
+## Quality checks and tests
+
+Before every change is considered done, both must pass:
 
 ```bash
 npm run check
 ```
 
-This runs all of the following in one go:
+```bash
+npm test
+```
+
+`npm test` builds the site and runs about 150 automated browser tests:
+every page in every language loads without errors and with correct
+hreflang tags, nothing scrolls sideways on phones, the form validates and
+sends exactly the expected JSON, the theme switches without flash or
+jumps, and new pages open at the top. They take under a minute. (First
+time on a new computer: `npx playwright install chromium`.) To re-run the
+tests without rebuilding: `npm run test:only`.
+
+The same checks run automatically on GitHub for every push
+(`.github/workflows/ci.yml`), together with a test build of the Docker
+image.
+
+`npm run check` runs all of the following in one go:
 
 | Command                  | What it checks                                         |
 | ------------------------ | ------------------------------------------------------ |
@@ -305,18 +351,29 @@ There are no analytics or tracking scripts, and no third-party requests. The map
 
 ---
 
-## Placeholder content
+## Content to check
 
-Everything below is **sample data** and must be replaced with the school's real information:
+Prices, ages, contacts, company details, reviews and most texts come from the previous blasto.lv (November 2026). Still to do:
 
-- `src/content/site.ts`: company name and number, phone, email, address, map link, opening hours, **all prices and minimum ages**, teachers.
-- Dictionaries (`lv.ts`, `ru.ts`, `en.ts`): the "About us" text, teacher bios, the "Good to know" notes and the FAQ answers.
+- **Teachers** (`site.ts` and `teachers.bios`): sample names and bios.
+- **Phone and address:** the old site has two numbers (25875969 and 20169111) and two addresses (Merķeļa iela 6 and 21).
+- **Code 95:** no price on the old site.
+- **Legal documents:** the privacy policy was rewritten from the old one and needs the school's review. The internal rules are copied word for word and mention another email and phone.
 
 Every such spot is marked with `TODO(content)`. To list them:
 
 ```bash
 grep -rn "TODO(content)" src
 ```
+
+---
+
+## Working with an AI assistant
+
+`CLAUDE.md` describes the project's rules, the map of files and step-by-step
+recipes. Claude Code reads it automatically at the start of every session,
+so a new session knows where things are and to run `npm run check` and
+`npm test` before finishing. Keep it up to date when the structure changes.
 
 ---
 

@@ -1,27 +1,16 @@
-import type { Metadata } from "next";
 import { InfoIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
 import { CategoryCard } from "@/components/courses/category-card";
+import { ExtraCosts } from "@/components/courses/extra-costs";
 import { Faq } from "@/components/courses/faq";
 import { PageHeader } from "@/components/sections/page-header";
 import { categories } from "@/content/site";
-import { getDictionary } from "@/dictionaries";
-import { getLocale } from "@/i18n/params";
-import { pageMetadata } from "@/lib/metadata";
+import type { PageViewProps } from ".";
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/[lang]/courses">): Promise<Metadata> {
-  const lang = await getLocale(params);
-  return pageMetadata({ lang, page: "courses", ...getDictionary(lang).courses.meta });
-}
-
-/** Courses & prices: all categories, then notes and FAQ. */
-export default async function CoursesPage({ params }: PageProps<"/[lang]/courses">) {
-  const lang = await getLocale(params);
-  const dict = getDictionary(lang);
+/** Courses & prices: all categories, extra costs, then notes and FAQ. */
+export function CoursesPage({ lang, dict }: PageViewProps) {
   const { notes, faq } = dict.courses;
 
   return (
@@ -37,6 +26,8 @@ export default async function CoursesPage({ params }: PageProps<"/[lang]/courses
           ))}
         </ul>
       </Container>
+
+      <ExtraCosts lang={lang} texts={dict.courses.extras} />
 
       <Container className="mt-24 grid gap-12 lg:grid-cols-[1fr_1.5fr]">
         <section aria-labelledby="notes-title">
