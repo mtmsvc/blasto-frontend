@@ -56,6 +56,10 @@ export function pageMetadata({
       url,
       locale: openGraphLocales[lang],
       alternateLocale: locales.filter((l) => l !== lang).map((l) => openGraphLocales[l]),
+      // Picture shown in link previews (WhatsApp, Facebook…). Not used on
+      // the site itself. Made from the logo: public/og-image.png.
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: site.name }],
     },
+    twitter: { card: "summary_large_image" },
   };
 }

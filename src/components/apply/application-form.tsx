@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CircleAlertIcon, CircleCheckIcon, LoaderCircleIcon } from "lucide-react";
 
@@ -34,6 +35,8 @@ export type ApplicationFormProps = {
   categories: { id: CategoryId; label: string; name: string }[];
   /** A category to tick in advance (from a "?category=b" link). */
   initialCategory?: CategoryId;
+  /** Link to the privacy policy, shown under the Send button. */
+  privacyHref: string;
 };
 
 type Status =
@@ -61,7 +64,12 @@ const FIELD_ORDER: FieldName[] = ["name", "phone", "email", "trainingType", "cat
  *    focus. Otherwise the data is sent and a success or error message is
  *    shown.
  */
-export function ApplicationForm({ texts, categories, initialCategory }: ApplicationFormProps) {
+export function ApplicationForm({
+  texts,
+  categories,
+  initialCategory,
+  privacyHref,
+}: ApplicationFormProps) {
   const id = useId(); // unique prefix for the ids that link labels and fields
   const [values, setValues] = useState<FormValues>(() => emptyValues(initialCategory));
   const [showErrors, setShowErrors] = useState(false);
@@ -347,7 +355,12 @@ export function ApplicationForm({ texts, categories, initialCategory }: Applicat
             {showErrors && hasErrors ? texts.errors.summary : ""}
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">{texts.form.privacy}</p>
+        <p className="text-sm text-muted-foreground">
+          {texts.form.privacy}{" "}
+          <Link href={privacyHref} className="prose-link text-foreground">
+            {texts.form.privacyLink}
+          </Link>
+        </p>
       </div>
     </form>
   );

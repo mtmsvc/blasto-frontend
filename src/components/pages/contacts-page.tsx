@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -16,17 +15,8 @@ import { Container } from "@/components/layout/container";
 import { IconBubble } from "@/components/sections/icon-bubble";
 import { PageHeader } from "@/components/sections/page-header";
 import { phoneHref, site } from "@/content/site";
-import { getDictionary } from "@/dictionaries";
-import { getLocale } from "@/i18n/params";
 import { pagePath } from "@/i18n/routes";
-import { pageMetadata } from "@/lib/metadata";
-
-export async function generateMetadata({
-  params,
-}: PageProps<"/[lang]/contacts">): Promise<Metadata> {
-  const lang = await getLocale(params);
-  return pageMetadata({ lang, page: "contacts", ...getDictionary(lang).contacts.meta });
-}
+import type { PageViewProps } from ".";
 
 /** One block of contact info: icon, small heading, content. */
 function ContactItem({
@@ -41,6 +31,8 @@ function ContactItem({
   return (
     <li className="flex gap-4">
       <IconBubble icon={icon} />
+      {/* `min-w-0` lets long words (e.g. the email) wrap instead of
+          pushing the page wider than the screen. */}
       <div className="min-w-0 flex-1">
         <h2 className="text-sm text-muted-foreground">{title}</h2>
         <div className="mt-1">{children}</div>
@@ -50,10 +42,16 @@ function ContactItem({
 }
 
 /** Contacts: address, phone, email, opening hours and company details. */
-export default async function ContactsPage({ params }: PageProps<"/[lang]/contacts">) {
-  const lang = await getLocale(params);
-  const dict = getDictionary(lang);
+export function ContactsPage({ lang, dict }: PageViewProps) {
   const texts = dict.contacts;
+  const company = texts.company;
+  const details = [
+    { label: company.name, value: site.legalName },
+    { label: company.registrationNumber, value: site.registrationNumber },
+    { label: company.legalAddress, value: site.legalAddress },
+    { label: company.bank, value: `${site.bank.name}, ${site.bank.swift}` },
+    { label: company.account, value: site.bank.account },
+  ];
 
   return (
     <>
@@ -66,7 +64,9 @@ export default async function ContactsPage({ params }: PageProps<"/[lang]/contac
               <address className="font-medium not-italic">
                 {site.address.street}
                 <br />
-                {site.address.postalCode}, {site.address.city}
+                {texts.addressDetails}
+                <br />
+                {site.address.city}, {site.address.postalCode}
               </address>
               <a
                 href={site.mapUrl}
@@ -80,33 +80,21 @@ export default async function ContactsPage({ params }: PageProps<"/[lang]/contac
             </ContactItem>
 
             <ContactItem icon={ClockIcon} title={texts.hours}>
-              <table className="w-full text-sm">
-                <tbody>
-                  {site.openingHours.map((row) => (
-                    <tr key={row.days}>
-                      <th
-                        scope="row"
-                        className="py-0.5 pr-4 text-left font-normal whitespace-nowrap"
-                      >
-                        {texts.days[row.days]}
-                      </th>
-                      <td className="py-0.5 text-right font-medium whitespace-nowrap">
-                        {row.time ?? texts.closed}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <ul className="flex flex-col gap-1 font-medium">
+                {texts.hoursLines.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
             </ContactItem>
 
             <ContactItem icon={PhoneIcon} title={texts.phone}>
-              <a href={phoneHref} className="prose-link">
+              <a href={phoneHref} className="prose-link font-medium whitespace-nowrap">
                 {site.phone}
               </a>
             </ContactItem>
 
             <ContactItem icon={MailIcon} title={texts.email}>
-              <a href={`mailto:${site.email}`} className="prose-link break-words">
+              <a href={`mailto:${site.email}`} className="prose-link font-medium break-all">
                 {site.email}
               </a>
             </ContactItem>
@@ -114,16 +102,14 @@ export default async function ContactsPage({ params }: PageProps<"/[lang]/contac
         </Card>
 
         <Card className="p-6 sm:p-8">
-          <h2 className="text-lg font-semibold">{texts.company.title}</h2>
+          <h2 className="text-lg font-semibold">{company.title}</h2>
           <dl className="flex flex-col gap-3 text-sm">
-            <div>
-              <dt className="text-muted-foreground">{texts.company.name}</dt>
-              <dd className="font-medium">{site.legalName}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{texts.company.registrationNumber}</dt>
-              <dd className="font-medium">{site.registrationNumber}</dd>
-            </div>
+            {details.map((detail) => (
+              <div key={detail.label}>
+                <dt className="text-muted-foreground">{detail.label}</dt>
+                <dd className="font-medium break-words">{detail.value}</dd>
+              </div>
+            ))}
           </dl>
           <Button asChild className="mt-2 self-start">
             <Link href={pagePath(lang, "apply")}>

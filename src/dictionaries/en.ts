@@ -8,7 +8,7 @@ import type { Dictionary } from ".";
 const en: Dictionary = {
   meta: {
     description:
-      "Blasto driving school: training for AM, A, B, BE, C, CE and D licences and code 95. Theory online or in person, experienced instructors and clear prices.",
+      "Blasto driving school in Riga: training for AM, A, B, BE, C, CE and D licences and code 95. Theory online or in person, lessons in Latvian, Russian or English.",
   },
 
   common: {
@@ -38,6 +38,8 @@ const en: Dictionary = {
     teachers: "Teachers",
     contacts: "Contacts",
     apply: "Apply",
+    privacy: "Privacy policy",
+    rules: "School rules",
   },
 
   footer: {
@@ -48,9 +50,9 @@ const en: Dictionary = {
   },
 
   home: {
-    meta: { title: "Blasto driving school" },
+    meta: { title: "Blasto driving school in Riga" },
     hero: {
-      eyebrow: "Driving school",
+      eyebrow: "Driving school in Riga",
       title: "A calm road to your driving licence",
       text: "Theory online or in person, patient instructors and clear prices. We teach the AM, A, B, BE, C, CE and D categories, as well as code 95.",
       primary: "Apply for training",
@@ -61,8 +63,8 @@ const en: Dictionary = {
     about: {
       title: "About us",
       paragraphs: [
-        "Blasto is a driving school where you learn without rush or stress. A confident driver grows from clear theory, enough practice and an instructor who explains instead of shouting.",
-        "We are with you all the way, from the first theory lesson to the CSDD exam.",
+        "Blasto is a driving school in Riga where you learn without rush or stress. You can study the theory in person or online, and you learn to drive in the same cars you will take the CSDD exam in.",
+        "We are with you all the way, from the medical certificate and the first aid course to the CSDD exam. You can get both right here at our school.",
       ],
     },
     benefits: {
@@ -74,15 +76,15 @@ const en: Dictionary = {
         },
         schedule: {
           title: "Flexible schedule",
-          text: "Driving lessons at times that suit you, including evenings and Saturdays.",
+          text: "Lessons from Monday to Saturday, at times that suit you.",
         },
-        online: {
-          title: "Theory online",
-          text: "Study from home or come to the classroom. It is your choice.",
+        languages: {
+          title: "Three languages",
+          text: "Training in Latvian, Russian or English.",
         },
         prices: {
           title: "Clear prices",
-          text: "All prices are shown upfront, with no hidden fees.",
+          text: "All costs are shown upfront, including the CSDD state fees.",
         },
       },
     },
@@ -91,16 +93,12 @@ const en: Dictionary = {
       text: "The course is the same in both formats; only the place is different.",
       online: {
         title: "Online",
-        text: "Lessons are streamed live over the internet. A computer or a phone is all you need.",
-        points: [
-          "Study from anywhere",
-          "Ask the teacher questions live",
-          "No time lost on the road",
-        ],
+        text: "Lessons take place over the internet. A computer or a phone is all you need.",
+        points: ["Study from anywhere", "No time lost on the road", "The same course as in person"],
       },
       inPerson: {
         title: "In person",
-        text: "Lessons take place in our classroom, together with a group.",
+        text: "Lessons take place in our classroom in the centre of Riga, together with a group.",
         points: [
           "Real conversation with the teacher and the group",
           "Study materials on site",
@@ -113,21 +111,27 @@ const en: Dictionary = {
       items: [
         {
           title: "Apply",
-          text: "Fill in a short form. We will call you back and answer your questions.",
+          text: "Fill in a short form. We will call you back, answer your questions and help you choose a group.",
         },
         {
           title: "Learn the theory",
-          text: "Online or in person, then take the theory exam at CSDD.",
+          text: "Online or in person. After the course, pass the school theory exam and then the CSDD one.",
         },
         {
           title: "Drive with an instructor",
-          text: "Practical lessons in a training car with your own instructor.",
+          text: "Get your learner permit at CSDD and drive with your own instructor.",
         },
         {
           title: "Pass the exam",
-          text: "When you are ready, take the driving exam and get your licence.",
+          text: "After the school driving exam, take the exam at CSDD and get your licence.",
         },
       ],
+    },
+    reviews: {
+      title: "What our students say",
+      rating: "{rating} out of 5 on Google",
+      count: "Reviews: {count}",
+      all: "All reviews on Google",
     },
   },
 
@@ -135,31 +139,37 @@ const en: Dictionary = {
     meta: {
       title: "Courses & prices",
       description:
-        "Training prices for the AM, A, B, BE, C, CE and D categories and code 95 at Blasto driving school.",
+        "Training prices for the AM, A, B, BE, C, CE and D categories and code 95 at Blasto driving school in Riga, including CSDD state fees.",
     },
     title: "Courses & prices",
-    text: "The theory course and the driving lessons are paid separately. The number of lessons is up to you: drive as much as you need.",
+    text: "The theory course and the driving are paid separately. Driving is counted in academic hours (45 min); a lesson is usually 2 hours.",
+    age: "Age",
+    ageRange: "training {start}+, exam {exam}+",
+    requires: "Requires category {list}",
+    or: "or",
+    documents: "Paperwork",
     theory: "Theory course",
-    lesson: "Driving lesson",
-    minAge: "Age",
+    drivingHour: "Driving, 45 min",
+    minDriving: "Min. driving, {hours} × 45 min",
+    priceOnRequest: "Price on request",
     apply: "Apply",
     applyFor: "Apply for category {category}",
     items: {
       b: {
         name: "Car",
-        text: "Cars up to 3,500 kg with no more than 8 passenger seats.",
+        text: "Cars up to 3,500 kg with no more than 8 seats (not counting the driver).",
       },
       be: {
         name: "Car with trailer",
-        text: "A category B car with a trailer heavier than 750 kg.",
+        text: "A category B car with a trailer or semi-trailer weighing up to 3,500 kg.",
       },
       am: {
         name: "Moped",
-        text: "Mopeds and light quadricycles with a top speed of 45 km/h.",
+        text: "Mopeds with an engine up to 50 cm³ and a top speed up to 45 km/h.",
       },
       a: {
         name: "Motorcycle",
-        text: "Motorcycles of any power.",
+        text: "Motorcycles from 50 cm³ and faster than 45 km/h. Also covers categories A1 and A2.",
       },
       c: {
         name: "Truck",
@@ -167,41 +177,70 @@ const en: Dictionary = {
       },
       ce: {
         name: "Truck with trailer",
-        text: "A category C truck with a trailer or semi-trailer.",
+        text: "A category C truck with a trailer weighing more than 750 kg.",
       },
       d: {
         name: "Bus",
-        text: "Buses with more than 8 passenger seats.",
+        text: "Buses with more than 8 seats (not counting the driver).",
       },
       "95": {
         name: "Code 95",
-        text: "Professional qualification for drivers who carry goods or passengers.",
+        text: "Professional qualification for carrying goods or passengers, plus the periodic training every 5 years (35 hours).",
+      },
+    },
+    extras: {
+      title: "Additional costs",
+      services: {
+        title: "Available at our school",
+        text: "Before the training you need a medical certificate and a first aid course.",
+        firstAid: "First aid course",
+        medicalCertificate: "Medical certificate",
+      },
+      csdd: {
+        title: "CSDD state fees",
+        text: "These are paid to CSDD, not to the school. The amounts are set by the state.",
+        learnerPermit: "Learner permit",
+        theoryExam: "Theory exam",
+        drivingExam: "Driving exam",
+        licence: "Issuing the licence",
       },
     },
     notes: {
       title: "Good to know",
       items: [
-        "CSDD exam and licence fees are not included in the price.",
-        "You need a medical certificate before the training starts.",
-        "One driving lesson lasts 60 minutes.",
+        "One driving lesson lasts 90 minutes, which is 2 academic hours.",
+        "Before driving, you need a learner permit from CSDD.",
+        "You learn to drive in the same cars you will take the CSDD exam in.",
+        "Training is available in Latvian, Russian and English.",
       ],
     },
     faq: {
       title: "Frequently asked questions",
       items: [
         {
-          question: "How long does the training take?",
+          question: "At what age can I start?",
           answer:
-            "The category B theory course usually takes about a month. The number of driving lessons depends on you.",
+            "You can start the category B training at 16 and take the CSDD exams from 18. The ages for other categories are shown on each category.",
         },
         {
-          question: "Can I pay in instalments?",
+          question: "Can I study the theory online?",
           answer:
-            "Yes. The theory course can be paid in two parts, and driving lessons are paid before each lesson.",
+            "Yes. Theory lessons take place in person in Riga or online, whichever suits you. Driving lessons take place in Riga.",
         },
         {
-          question: "What should I bring to the first lesson?",
-          answer: "An identity document and a medical certificate. We provide everything else.",
+          question: "What if I miss a theory lesson?",
+          answer:
+            "You can attend the missed lesson with another group (€10) or individually (€70). If you are more than 15 minutes late, the lesson does not count.",
+        },
+        {
+          question: "Can I cancel a driving lesson?",
+          answer:
+            "Yes, no later than 24 hours before it starts. Lessons cancelled later are not refunded.",
+        },
+        {
+          question: "Can I take the exam in an automatic car?",
+          answer:
+            "Yes. Your licence will then have the code B (78), which allows you to drive only cars with an automatic gearbox.",
         },
       ],
     },
@@ -229,25 +268,25 @@ const en: Dictionary = {
   contacts: {
     meta: {
       title: "Contacts",
-      description: "Address, phone, email and opening hours of Blasto driving school.",
+      description:
+        "Address of Blasto driving school in Riga (Merķeļa iela 6), phone, email, opening hours and company details.",
     },
     title: "Contacts",
     text: "Call, write or drop by. We are happy to answer any question.",
-    address: "Address",
+    address: "Lesson address",
+    addressDetails: "3rd floor, room 301",
     phone: "Phone",
     email: "Email",
     hours: "Opening hours",
+    hoursLines: ["Every day, remotely", "Lessons: Monday–Saturday"],
     openMap: "Open in maps",
-    closed: "Closed",
-    days: {
-      weekdays: "Monday–Friday",
-      saturday: "Saturday",
-      sunday: "Sunday",
-    },
     company: {
       title: "Company details",
       name: "Name",
       registrationNumber: "Registration no.",
+      legalAddress: "Legal address",
+      bank: "Bank",
+      account: "Account no.",
     },
   },
 
@@ -268,13 +307,14 @@ const en: Dictionary = {
       online: "Online",
       onlineHint: "Lessons over the internet",
       inPerson: "In person",
-      inPersonHint: "Lessons in the classroom",
+      inPersonHint: "Lessons in our classroom in Riga",
       categories: "Categories",
       categoriesHint: "You can choose more than one.",
       submit: "Send application",
       sending: "Sending…",
       privacy:
         "By sending the application, you agree that we use your details only to contact you about the training.",
+      privacyLink: "Privacy policy",
     },
     errors: {
       summary: "Please correct the highlighted fields.",
@@ -306,6 +346,72 @@ const en: Dictionary = {
         "You start your training.",
       ],
       question: "Questions? Call us:",
+    },
+  },
+
+  legal: {
+    updated: "Updated: November 2026",
+    rulesNote:
+      "The school rules are available in Latvian only. If anything is unclear, call or write to us and we will explain.",
+    rulesMeta: {
+      title: "School rules",
+      description: "Internal rules for students of Blasto driving school (in Latvian).",
+    },
+    privacy: {
+      meta: {
+        title: "Privacy policy",
+        description: "How Blasto driving school processes and protects your personal data.",
+      },
+      title: "Privacy policy",
+      sections: [
+        {
+          title: "Who processes your data",
+          paragraphs: [
+            "The data controller is {legalName}, registration no. {registrationNumber}, legal address: {legalAddress}. You can reach us by email at {email} or by phone at {phone}.",
+          ],
+        },
+        {
+          title: "What data we process",
+          items: [
+            "From the application form: your name, phone number, email address, the chosen theory format and categories.",
+            "When signing the training contract: also your personal code, address and other details needed for the training and for registration at CSDD.",
+          ],
+        },
+        {
+          title: "Why, and on what legal basis",
+          items: [
+            "To answer your application and contact you about the training (steps before entering into a contract, GDPR Article 6(1)(b)).",
+            "To sign and carry out the training contract (GDPR Article 6(1)(b)).",
+            "To meet legal obligations, such as registering you at CSDD and keeping accounting records (GDPR Article 6(1)(c)).",
+            "To send news and offers, but only with your consent, which you can withdraw at any time (GDPR Article 6(1)(a)).",
+          ],
+        },
+        {
+          title: "Who we share data with",
+          paragraphs: [
+            "Only those who need it for the training or where the law requires it: CSDD, your instructor, partners who provide part of the training (such as first aid courses), and public authorities. We do not sell data, and we store it in the European Union or the European Economic Area.",
+          ],
+        },
+        {
+          title: "How long we keep data",
+          paragraphs: [
+            "We keep application data for as long as we need it to contact you about the training. Contracts and accounting documents are kept for the periods set by law, for example at least 5 years for accounting documents. When data is no longer needed, we delete or anonymise it.",
+          ],
+        },
+        {
+          title: "Your rights",
+          paragraphs: [
+            "You have the right to access your data, correct it, ask for it to be deleted or its processing to be restricted, object to processing, receive your data to transfer it, and withdraw your consent. Write to us at {email} or visit our office. We will reply within one month.",
+            "If you believe your rights have been violated, you can file a complaint with the Data State Inspectorate of Latvia (www.dvi.gov.lv).",
+          ],
+        },
+        {
+          title: "Cookies",
+          paragraphs: [
+            "This website does not use cookies, analytics or advertising tools. If you choose the light or dark theme, that choice is saved only in your browser, and you can delete it in your browser settings.",
+          ],
+        },
+      ],
     },
   },
 

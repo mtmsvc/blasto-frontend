@@ -42,10 +42,27 @@ export function getThemePreference(): ThemePreference {
   }
 }
 
-/** Puts the `dark` class on <html> (or removes it) for a preference. */
+/** Whether a preference means "dark" right now. */
+function isDark(preference: ThemePreference) {
+  return preference === "dark" || (preference === "system" && darkQuery().matches);
+}
+
+/**
+ * Puts the `dark` class on <html> (or removes it) for a preference.
+ *
+ * While the class changes, the `theme-switching` class turns off all CSS
+ * transitions (see globals.css). Otherwise elements with a hover
+ * transition (buttons, links) would fade to their new colors a moment
+ * later than the rest of the page.
+ */
 function applyTheme(preference: ThemePreference) {
-  const dark = preference === "dark" || (preference === "system" && darkQuery().matches);
-  document.documentElement.classList.toggle("dark", dark);
+  const root = document.documentElement;
+  root.classList.add("theme-switching");
+  root.classList.toggle("dark", isDark(preference));
+  // Reading a style forces the browser to apply the new colors now,
+  // while transitions are still off.
+  void getComputedStyle(root).color;
+  requestAnimationFrame(() => root.classList.remove("theme-switching"));
 }
 
 /* A tiny "store": components subscribe to it and re-render on change. */
@@ -56,17 +73,71 @@ function notify() {
   listeners.forEach((listener) => listener());
 }
 
-/** Saves the visitor's choice and applies it immediately. */
-export function setThemePreference(preference: ThemePreference) {
+/** Saves the choice. Returns false when storage is blocked. */
+function storePreference(preference: ThemePreference): boolean {
   try {
     if (preference === "system") localStorage.removeItem(STORAGE_KEY);
     else localStorage.setItem(STORAGE_KEY, preference);
+    return true;
   } catch {
-    // Storage blocked: the theme still changes, it just is not remembered.
-    applyTheme(preference);
+    return false; // storage blocked: the theme still changes, it just is not remembered
+  }
+}
+
+/**
+ * Saves the visitor's choice and applies it.
+ *
+ * If `origin` (a point on the screen, usually the theme button) is given
+ * and the colors really change, the new theme is revealed as a circle
+ * growing from that point. How it works, and why it is cheap:
+ *
+ * - `document.startViewTransition` takes a picture of the page, applies the
+ *   change, and lets us animate from the old picture to the new page.
+ * - We animate only a `clip-path` circle on the new page. The browser does
+ *   this on the graphics card, in about half a second, without
+ *   re-rendering the page. Even old phones handle it smoothly.
+ * - Browsers without this feature, and visitors who asked their device for
+ *   reduced motion, get an instant switch instead.
+ */
+export function setThemePreference(preference: ThemePreference, origin?: { x: number; y: number }) {
+  const commit = () => {
+    if (storePreference(preference)) notify();
+    else applyTheme(preference);
+  };
+
+  const colorsChange = isDark(preference) !== document.documentElement.classList.contains("dark");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!origin || !colorsChange || reducedMotion || !document.startViewTransition) {
+    commit();
     return;
   }
-  notify();
+
+  const transition = document.startViewTransition(commit);
+  transition.ready
+    .then(() => {
+      // Radius that reaches the farthest corner of the screen.
+      const radius = Math.hypot(
+        Math.max(origin.x, window.innerWidth - origin.x),
+        Math.max(origin.y, window.innerHeight - origin.y),
+      );
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${origin.x}px ${origin.y}px)`,
+            `circle(${radius}px at ${origin.x}px ${origin.y}px)`,
+          ],
+        },
+        {
+          duration: 550,
+          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          pseudoElement: "::view-transition-new(root)",
+        },
+      );
+    })
+    .catch(() => {
+      // The transition was skipped (e.g. the tab was hidden): the theme has
+      // already been applied by `commit`, so there is nothing to do.
+    });
 }
 
 /**

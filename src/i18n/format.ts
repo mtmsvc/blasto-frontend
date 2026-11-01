@@ -25,3 +25,12 @@ export function fill(template: string, values: Record<string, string | number>):
     key in values ? String(values[key]) : match,
   );
 }
+
+/**
+ * Joins items with "or" in the right way for each language:
+ *   formatList(["C1", "D1", "C"], "lv") → "C1, D1 vai C"
+ *   formatList(["C1", "D1", "C"], "en") → "C1, D1, or C"
+ */
+export function formatList(items: string[], lang: Locale): string {
+  return new Intl.ListFormat(lang, { type: "disjunction" }).format(items);
+}

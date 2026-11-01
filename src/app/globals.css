@@ -197,8 +197,10 @@
   }
 
   html {
-    /* Leave room for the sticky header when jumping to #anchors. */
-    scroll-padding-top: 6rem;
+    /* Note: no `scroll-padding-top` here. It made the page jump whenever
+       focus moved into the sticky header (theme menu, mobile menu).
+       Elements that are link targets get their own offset instead,
+       e.g. `scroll-mt-28` on the category cards. */
     -webkit-text-size-adjust: 100%;
   }
 
@@ -218,4 +220,23 @@
    The underline is a soft green; the text keeps the normal text color. */
 @utility prose-link {
   @apply font-medium underline decoration-primary/40 decoration-2 underline-offset-4 transition-colors hover:decoration-current;
+}
+
+/*
+ * Theme switch (see src/lib/theme.ts).
+ *
+ * `theme-switching` is on <html> for a split second while the colors
+ * change: it stops hover transitions, so every element switches at once.
+ */
+.theme-switching,
+.theme-switching * {
+  transition: none !important;
+}
+
+/* The circle reveal: the browser's default cross-fade is replaced by our
+   own clip-path animation on the new page. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

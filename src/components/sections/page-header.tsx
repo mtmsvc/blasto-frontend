@@ -4,7 +4,7 @@ import { Container } from "@/components/layout/container";
 export function PageHeader({ title, text }: { title: string; text?: string }) {
   return (
     <Container className="pt-16 pb-10 sm:pt-24 sm:pb-14">
-      <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
+      <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance break-words hyphens-auto sm:text-5xl">
         {title}
       </h1>
       {text && (

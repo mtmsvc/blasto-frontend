@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { About } from "@/components/home/about";
 import { Formats } from "@/components/home/formats";
 import { Hero } from "@/components/home/hero";
+import { Reviews } from "@/components/home/reviews";
 import { Steps } from "@/components/home/steps";
 import { CtaSection } from "@/components/sections/cta-section";
 import { getDictionary } from "@/dictionaries";
@@ -31,6 +32,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <About dict={dict} />
       <Formats dict={dict} />
       <Steps dict={dict} />
+      <Reviews lang={lang} texts={dict.home.reviews} />
       <CtaSection lang={lang} dict={dict} />
     </>
   );
