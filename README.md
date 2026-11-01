@@ -170,6 +170,11 @@ src/
     ├── metadata.ts             <title>, description, canonical, hreflang
     └── utils.ts                cn() helper for class names
 
+brand/                          Logo files for print, social media, documents
+├── blasto-logo.svg             Wordmark, sage green, transparent background
+├── blasto-logo-on-dark.svg     Wordmark on the dark forest-green background
+└── blasto-logo-upright.svg     Alternative with a smaller slant (8° instead of 14°)
+
 scripts/
 ├── check-contrast.mjs          Verifies the colors meet WCAG AA
 └── mock-api.mjs                Fake backend for local testing
@@ -216,6 +221,10 @@ npm run check:contrast
 It checks every text/background pair (including text on glass) against WCAG AA and tells you which one fails.
 
 **The rule:** pastel colors are for backgrounds, borders and decoration only. Text always uses a `*-foreground` token.
+
+### The logo
+
+On the website the logo is drawn in code, in `src/components/layout/logo.tsx`. It takes the theme's colors and stays sharp at any size. The letters are simple shapes in an upright grid, slanted by one number (`SLANT`). The favicon is `src/app/icon.svg` (the "B" alone). Ready-made files for other uses are in `brand/`.
 
 ### Add a shadcn/ui component
 
