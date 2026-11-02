@@ -87,6 +87,11 @@
   --glass-border: oklch(0.97 0.025 145 / 0.6);
   --glass-highlight: oklch(0.99 0.015 145 / 0.8);
   --glass-shadow: oklch(0.35 0.05 160 / 0.2);
+
+  /* The header: a brighter, more opaque frosted bar, so it reads as a bar
+     floating above the page and not as one more card. */
+  --glass-bar: oklch(0.985 0.012 150 / 0.78);
+  --glass-bar-border: oklch(1 0 0 / 0.85);
 }
 
 /* ---------- Dark theme ---------- */
@@ -132,6 +137,9 @@
   --glass-border: oklch(1 0 0 / 0.09);
   --glass-highlight: oklch(1 0 0 / 0.07);
   --glass-shadow: oklch(0 0 0 / 0.3);
+
+  --glass-bar: oklch(0.13 0.012 165 / 0.8);
+  --glass-bar-border: oklch(1 0 0 / 0.1);
 }
 
 /* Expose the tokens to Tailwind as colors, fonts and radii. */
@@ -199,6 +207,28 @@
   @media (prefers-reduced-transparency: reduce) {
     background-color: var(--card);
     background-image: none;
+  }
+}
+
+/*
+ * `glass-bar`: the header's frosted bar. Like `glass`, but more opaque and
+ * blurrier, so the header stands apart from the cards and stays calm while
+ * content scrolls behind it.
+ */
+@utility glass-bar {
+  background-color: var(--glass-bar);
+  border: 1px solid var(--glass-bar-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 12px 40px -16px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8);
+  backdrop-filter: blur(28px) saturate(1.8);
+
+  @supports not (backdrop-filter: blur(1px)) {
+    background-color: var(--card);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: var(--card);
   }
 }
 

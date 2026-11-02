@@ -12,8 +12,9 @@ import type { Dictionary } from "@/dictionaries";
 
 /**
  * One licence category: what it allows, age and requirements, prices, and
- * two buttons: "More" opens the category page (e.g. /lv/kategorijas/b/),
- * "Apply" opens the form with this category already ticked
+ * two buttons: "More" (outline) opens the category page (e.g.
+ * /lv/kategorijas/b/), "Apply" (solid, the main action) opens the form with
+ * this category already ticked
  * (e.g. /lv/pieteikums/?category=b).
  */
 export function CategoryCard({
@@ -94,7 +95,7 @@ export function CategoryCard({
             {texts.more}
           </Link>
         </Button>
-        <Button asChild variant="secondary" size="sm" className="h-10">
+        <Button asChild size="sm" className="h-10">
           <Link
             href={`${pagePath(lang, "apply")}?category=${category.id}`}
             aria-label={fill(texts.applyFor, { category: category.label })}

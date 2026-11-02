@@ -60,6 +60,8 @@ function checkTheme(name, tokens) {
   const glassOver = (behind) => over(color("glass"), behind);
   const blobs = ["blob-1", "blob-2", "blob-3"].map((blob) => over(color(blob), bg));
   const glassSurfaces = [glassOver(bg), ...blobs.map(glassOver)];
+  const barOver = (behind) => over(color("glass-bar"), behind);
+  const barSurfaces = [barOver(bg), ...blobs.map(barOver)];
 
   const checks = [
     // [description, foreground, background(s), minimum ratio]
@@ -91,6 +93,8 @@ function checkTheme(name, tokens) {
     ["error text on glass", color("destructive"), glassSurfaces, 4.5],
     ["foreground on glass", color("foreground"), glassSurfaces, 4.5],
     ["muted text on glass", color("muted-foreground"), glassSurfaces, 4.5],
+    ["foreground on header bar", color("foreground"), barSurfaces, 4.5],
+    ["muted text on header bar", color("muted-foreground"), barSurfaces, 4.5],
     ["muted text on background over shapes", color("muted-foreground"), blobs, 4.5],
     ["foreground on background over shapes", color("foreground"), blobs, 4.5],
     ["form control border", color("input"), [bg, surface("card"), ...glassSurfaces], 3],
