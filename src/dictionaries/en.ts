@@ -156,7 +156,7 @@ const en: Dictionary = {
     apply: "Apply",
     applyFor: "Apply for category {category}",
     more: "Details",
-    moreAbout: "More about category {category}",
+    moreAbout: "Details about category {category}",
     items: {
       b: {
         name: "Car",

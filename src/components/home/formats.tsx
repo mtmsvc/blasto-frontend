@@ -21,7 +21,7 @@ export function Formats({ dict }: { dict: Dictionary }) {
         <ul className="grid gap-5 md:grid-cols-2">
           {items.map((item) => (
             <li key={item.title}>
-              <Card glass className="h-full gap-5 p-7 sm:p-8">
+              <Card className="h-full gap-5 p-7 sm:p-8">
                 <div className="flex items-center gap-4">
                   <IconBubble icon={item.icon} />
                   <CardTitle className="text-xl">{item.title}</CardTitle>

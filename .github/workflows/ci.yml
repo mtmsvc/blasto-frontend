@@ -18,8 +18,9 @@ jobs:
       - run: npm ci
       # Types, lint, formatting, color contrast
       - run: npm run check
-      - run: npx playwright install --with-deps chromium
-      # Builds the site and runs every browser test
+      - run: npx playwright install --with-deps chromium firefox webkit
+      # Builds the site and runs every browser test in Chrome, Firefox and
+      # Safari's engine (WebKit)
       - run: npm test
       - uses: actions/upload-artifact@v4
         if: failure()

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { MenuIcon } from "lucide-react";
 
@@ -21,17 +21,32 @@ type MobileNavProps = {
 /** The menu button and slide-in panel shown on small screens. */
 export function MobileNav({ lang, items, apply, labels, className }: MobileNavProps) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const close = () => setOpen(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={labels.openMenu} className={className}>
+        <Button
+          ref={triggerRef}
+          variant="ghost"
+          size="icon"
+          aria-label={labels.openMenu}
+          className={className}
+        >
           <MenuIcon className="size-5" aria-hidden />
         </Button>
       </SheetTrigger>
 
-      <SheetContent closeLabel={labels.closeMenu} aria-describedby={undefined}>
+      <SheetContent
+        closeLabel={labels.closeMenu}
+        aria-describedby={undefined}
+        // Return focus to the menu button without scrolling the page.
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          triggerRef.current?.focus({ preventScroll: true });
+        }}
+      >
         <SheetTitle className="pt-2 text-muted-foreground">{labels.menu}</SheetTitle>
 
         <nav aria-label={labels.menu}>
@@ -44,7 +59,12 @@ export function MobileNav({ lang, items, apply, labels, className }: MobileNavPr
         </nav>
 
         <div className="mt-auto flex flex-col gap-4">
-          <LanguageSwitcher current={lang} label={labels.language} className="self-start" />
+          <LanguageSwitcher
+            current={lang}
+            label={labels.language}
+            landmark={false}
+            className="self-start"
+          />
           <Button asChild size="lg">
             <Link href={apply.href} onClick={close}>
               {apply.label}

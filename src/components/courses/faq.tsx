@@ -10,7 +10,7 @@ export function Faq({ items }: { items: { question: string; answer: string }[] }
   return (
     <div className="flex flex-col gap-3">
       {items.map((item) => (
-        <details key={item.question} className="group rounded-2xl border border-border bg-card">
+        <details key={item.question} className="group rounded-2xl glass">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-5 py-4 font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
             {item.question}
             <ChevronDownIcon

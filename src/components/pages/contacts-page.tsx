@@ -58,7 +58,7 @@ export function ContactsPage({ lang, dict }: PageViewProps) {
       <PageHeader title={texts.title} text={texts.text} />
 
       <Container className="grid items-start gap-6 lg:grid-cols-[2fr_1fr]">
-        <Card glass className="p-6 sm:p-8">
+        <Card className="p-6 sm:p-8">
           <ul className="grid gap-8 sm:grid-cols-2">
             <ContactItem icon={MapPinIcon} title={texts.address}>
               <address className="font-medium not-italic">

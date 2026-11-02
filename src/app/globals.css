@@ -36,14 +36,15 @@
 
   --radius: 1rem;
 
-  /* Page */
-  --background: oklch(0.985 0.006 160);
+  /* Page: a soft sage gray, not pure white, so the glass surfaces stand out */
+  --background: oklch(0.945 0.016 162);
   --foreground: oklch(0.25 0.025 165);
 
-  /* Solid surfaces (cards, dropdowns) */
-  --card: oklch(1 0 0);
+  /* Solid surfaces: dropdown menus, and the fallback for glass in browsers
+     without blur */
+  --card: oklch(0.975 0.008 160);
   --card-foreground: oklch(0.25 0.025 165);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.985 0.006 160);
   --popover-foreground: oklch(0.25 0.025 165);
 
   /* Main call-to-action: deep green with white text */
@@ -51,15 +52,15 @@
   --primary-foreground: oklch(0.99 0.005 160);
 
   /* Soft pastel green surfaces (secondary buttons, badges, highlights) */
-  --secondary: oklch(0.93 0.045 158);
+  --secondary: oklch(0.9 0.05 158);
   --secondary-foreground: oklch(0.3 0.05 162);
 
   /* Quiet surfaces and secondary text */
-  --muted: oklch(0.96 0.014 160);
-  --muted-foreground: oklch(0.47 0.025 165);
+  --muted: oklch(0.92 0.016 160);
+  --muted-foreground: oklch(0.44 0.025 165);
 
   /* Hover/active backgrounds of menu items and ghost buttons */
-  --accent: oklch(0.94 0.035 158);
+  --accent: oklch(0.91 0.04 158);
   --accent-foreground: oklch(0.27 0.04 162);
 
   /* Errors */
@@ -67,21 +68,24 @@
   --destructive-foreground: oklch(0.99 0.005 160);
 
   /* Lines */
-  --border: oklch(0.9 0.022 160); /* decorative dividers and card edges */
-  --input: oklch(0.6 0.03 160); /* form controls: ≥ 3:1 so fields are visible */
+  --border: oklch(0.86 0.025 160); /* decorative dividers and card edges */
+  --input: oklch(0.58 0.03 160); /* form controls: ≥ 3:1 so fields are visible */
   --ring: oklch(0.52 0.1 160); /* keyboard focus outline */
 
   /* Decorative pastels (never for text) */
-  --pastel: oklch(0.9 0.06 158);
-  --blob-1: oklch(0.88 0.075 155);
-  --blob-2: oklch(0.91 0.055 185);
-  --blob-3: oklch(0.95 0.06 115);
+  --pastel: oklch(0.86 0.07 158);
+  --blob-1: oklch(0.84 0.09 155);
+  --blob-2: oklch(0.87 0.07 188);
+  --blob-3: oklch(0.91 0.08 118);
 
-  /* "Frosted glass" surfaces (see the `glass` utility below) */
-  --glass: oklch(1 0 0 / 0.62);
-  --glass-border: oklch(0.88 0.03 160 / 0.7);
-  --glass-highlight: oklch(1 0 0 / 0.9);
-  --glass-shadow: oklch(0.4 0.05 160 / 0.08);
+  /* "Frosted glass" surfaces (see the `glass` utility below).
+     --glass is the clearest part of the glass (used to check text
+     contrast); --glass-sheen is the brighter light that fades across it. */
+  --glass: oklch(1 0 0 / 0.42);
+  --glass-sheen: oklch(1 0 0 / 0.38);
+  --glass-border: oklch(1 0 0 / 0.75);
+  --glass-highlight: oklch(1 0 0 / 0.95);
+  --glass-shadow: oklch(0.35 0.05 160 / 0.14);
 }
 
 /* ---------- Dark theme ---------- */
@@ -122,7 +126,8 @@
   --blob-2: oklch(0.31 0.05 190);
   --blob-3: oklch(0.3 0.045 175);
 
-  --glass: oklch(0.22 0.015 165 / 0.6);
+  --glass: oklch(0.22 0.015 165 / 0.55);
+  --glass-sheen: oklch(1 0 0 / 0.05);
   --glass-border: oklch(1 0 0 / 0.09);
   --glass-highlight: oklch(1 0 0 / 0.07);
   --glass-shadow: oklch(0 0 0 / 0.3);
@@ -174,20 +179,25 @@
  */
 @utility glass {
   background-color: var(--glass);
+  /* A soft diagonal sheen, brightest in the top-left corner, like light
+     falling on frosted glass. */
+  background-image: linear-gradient(135deg, var(--glass-sheen), transparent 65%);
   border: 1px solid var(--glass-border);
   box-shadow:
     inset 0 1px 0 var(--glass-highlight),
-    0 8px 32px -12px var(--glass-shadow);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
+    0 10px 36px -14px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
 
   /* Old browsers without blur, and people who asked their OS for less
      transparency, get a solid surface instead. */
   @supports not (backdrop-filter: blur(1px)) {
     background-color: var(--card);
+    background-image: none;
   }
   @media (prefers-reduced-transparency: reduce) {
     background-color: var(--card);
+    background-image: none;
   }
 }
 

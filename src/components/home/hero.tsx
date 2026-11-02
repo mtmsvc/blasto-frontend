@@ -43,7 +43,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           </div>
         </div>
 
-        <Card glass className="gap-5 rounded-[2rem] p-6 sm:p-8">
+        <Card className="gap-5 rounded-[2rem] p-6 sm:p-8">
           <div>
             <h2 className="text-lg font-semibold">{hero.cardTitle}</h2>
             <p className="mt-1 text-sm text-muted-foreground">{hero.cardText}</p>

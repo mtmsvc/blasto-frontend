@@ -36,7 +36,7 @@ export function ApplyPage({ lang, dict }: PageViewProps) {
       <PageHeader title={dict.apply.title} text={dict.apply.text} />
 
       <Container className="grid items-start gap-6 lg:grid-cols-[1fr_20rem]">
-        <Card glass className="p-6 sm:p-10">
+        <Card className="p-6 sm:p-10">
           <Suspense fallback={<ApplicationForm {...formProps} />}>
             <ApplicationFormFromUrl {...formProps} />
           </Suspense>

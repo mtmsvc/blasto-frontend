@@ -49,7 +49,7 @@ export function Reviews({ lang, texts }: { lang: Locale; texts: Dictionary["home
         <ul className="grid gap-4 md:grid-cols-3">
           {reviews.map((review) => (
             <li key={review.author}>
-              <Card glass className="h-full gap-4">
+              <Card className="h-full gap-4">
                 <QuoteIcon className="size-6 text-muted-foreground" aria-hidden />
                 <blockquote lang={review.lang} className="leading-relaxed">
                   {review.text}

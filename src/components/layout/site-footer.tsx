@@ -18,7 +18,12 @@ export function SiteFooter({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <div className="flex flex-col items-start gap-4">
           <Logo />
           <p className="max-w-xs text-sm text-muted-foreground">{dict.footer.tagline}</p>
-          <LanguageSwitcher current={lang} label={dict.common.language} className="self-start" />
+          <LanguageSwitcher
+            current={lang}
+            label={dict.common.language}
+            landmark={false}
+            className="self-start"
+          />
         </div>
 
         <nav aria-labelledby="footer-pages">
