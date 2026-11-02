@@ -78,6 +78,7 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
 
   const fieldRefs = useRef<Partial<Record<FieldName, HTMLElement | null>>>({});
   const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  const questionsRef = useRef<HTMLTextAreaElement>(null);
 
   const errors = validate(values);
   const hasErrors = Object.keys(errors).length > 0;
@@ -85,19 +86,28 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
   const errorFor = (field: FieldName) =>
     showErrors && errors[field] ? texts.errors[errors[field]] : undefined;
 
-  // Once JavaScript runs: tick the category from a "?category=b" link,
-  // without touching anything the visitor may have typed already.
+  // Once JavaScript runs:
+  // - take over anything typed before that moment. The text fields are
+  //   "uncontrolled" (`defaultValue`): the browser keeps what is typed, and
+  //   React only reads it. Otherwise Safari erases early typing when React
+  //   starts.
+  // - tick the category from a "?category=b" link.
   useEffect(() => {
+    const typed = {
+      name: (fieldRefs.current.name as HTMLInputElement | null)?.value ?? "",
+      phone: (fieldRefs.current.phone as HTMLInputElement | null)?.value ?? "",
+      email: (fieldRefs.current.email as HTMLInputElement | null)?.value ?? "",
+      questions: questionsRef.current?.value ?? "",
+    };
     const category = findCategory(new URLSearchParams(window.location.search).get("category"));
     // Setting state in an effect is intended here: the URL is only known in
     // the browser, after the pre-built HTML has loaded.
     /* eslint-disable react-hooks/set-state-in-effect */
-    if (category) {
-      setValues((current) => ({
-        ...current,
-        categories: { ...current.categories, [category.id]: true },
-      }));
-    }
+    setValues((current) => ({
+      ...current,
+      ...typed,
+      categories: category ? { ...current.categories, [category.id]: true } : current.categories,
+    }));
     setReady(true);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -212,7 +222,7 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
           name="name"
           autoComplete="name"
           maxLength={100}
-          value={values.name}
+          defaultValue=""
           onChange={(e) => update("name", e.target.value)}
           aria-invalid={errorFor("name") ? true : undefined}
           aria-describedby={describedBy(errorFor("name") && errorId("name"))}
@@ -234,7 +244,7 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
             inputMode="tel"
             autoComplete="tel"
             maxLength={25}
-            value={values.phone}
+            defaultValue=""
             onChange={(e) => update("phone", e.target.value)}
             aria-invalid={errorFor("phone") ? true : undefined}
             aria-describedby={describedBy(ids.phoneHint, errorFor("phone") && errorId("phone"))}
@@ -258,7 +268,7 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
             inputMode="email"
             autoComplete="email"
             maxLength={254}
-            value={values.email}
+            defaultValue=""
             onChange={(e) => update("email", e.target.value)}
             aria-invalid={errorFor("email") ? true : undefined}
             aria-describedby={describedBy(errorFor("email") && errorId("email"))}
@@ -352,9 +362,10 @@ export function ApplicationForm({ texts, categories, privacyHref }: ApplicationF
         <Label htmlFor={ids.questions}>{texts.form.questions}</Label>
         <Textarea
           id={ids.questions}
+          ref={questionsRef}
           name="questions"
           maxLength={QUESTIONS_MAX_LENGTH}
-          value={values.questions}
+          defaultValue=""
           onChange={(e) => update("questions", e.target.value)}
           aria-describedby={ids.questionsHint}
         />
