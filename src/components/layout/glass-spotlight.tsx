@@ -11,15 +11,18 @@ import { useEffect } from "react";
  * CSS variables `--spot-x` / `--spot-y`, and `data-spot` turns the light on.
  * The drawing itself is pure CSS (see the `glass` utility in globals.css).
  *
- * Only for devices with a real mouse; off for touch screens and for people
- * who asked their device for reduced motion. Rendered once, in the [lang]
- * layout. Draws nothing itself.
+ * Works for every mouse or touchpad movement (`pointerType === "mouse"`),
+ * also on laptops with a touchscreen; finger touches are ignored. Off for
+ * people who asked their device for reduced motion. Rendered once, in the
+ * [lang] layout. Draws nothing itself.
  */
 export function GlassSpotlight() {
   useEffect(() => {
-    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    // Not checked: the "(hover: hover)" media query. Touchscreen laptops
+    // report "no hover" even when used with a touchpad, which turned the
+    // light off for them. Each movement's pointerType is checked instead.
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (reducedMotion.matches) return;
 
     let lit: HTMLElement | null = null; // the glass element currently lit
     let frame = 0;
