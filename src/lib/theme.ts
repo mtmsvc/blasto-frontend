@@ -16,6 +16,10 @@ export type ThemePreference = "light" | "dark" | "system";
 
 const STORAGE_KEY = "theme";
 
+/** How long the circle animation of a theme change takes, in milliseconds.
+ *  Bigger = slower. */
+export const THEME_ANIMATION_MS = 900;
+
 /**
  * Inline script placed in <head> of every page. It must be tiny, have no
  * imports, and never throw (localStorage can be blocked), so it is plain
@@ -128,8 +132,8 @@ export function setThemePreference(preference: ThemePreference, origin?: { x: nu
           ],
         },
         {
-          duration: 550,
-          easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+          duration: THEME_ANIMATION_MS,
+          easing: "cubic-bezier(0.65, 0, 0.35, 1)", // gentle start and finish
           pseudoElement: "::view-transition-new(root)",
         },
       );

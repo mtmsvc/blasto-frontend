@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { THEME_ANIMATION_MS } from "@/lib/theme";
+
 import { openReady, scrollTo, scrollY } from "../helpers";
 
 /** Light/dark theme: switching, remembering, no flash, no page jump. */
@@ -41,7 +43,7 @@ test("switching the theme does not move the page", async ({ page }) => {
   await openReady(page, "/lv/");
   await scrollTo(page, 1200);
   await chooseTheme(page, "Tumšā");
-  await page.waitForTimeout(700); // let the animation finish
+  await page.waitForTimeout(THEME_ANIMATION_MS + 200); // let the animation finish
   expect(await scrollY(page)).toBe(1200);
 });
 
