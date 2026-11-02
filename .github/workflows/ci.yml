@@ -28,3 +28,22 @@ jobs:
           name: playwright-report
           path: test-results/
           retention-days: 7
+  deploy:
+    needs: checks-and-tests                       # only after all checks and tests pass
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build                        # writes the static site to out/
+      - name: Copy to server
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          rsync -az --delete out/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:~/blasto/site/
