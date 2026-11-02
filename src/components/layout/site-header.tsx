@@ -11,7 +11,8 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/dictionaries";
 
 /**
- * Sticky header: a floating glass bar.
+ * Sticky header: a floating glass bar. Same glass as the cards, but less
+ * see-through (`--glass` is replaced by `--glass-header` on this element).
  *
  * What is visible at which width (Tailwind breakpoints):
  *   < 640px   logo · theme · menu button
@@ -24,7 +25,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 sm:px-4">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 rounded-2xl glass-bar pr-2 pl-4 sm:pr-3 sm:pl-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 rounded-2xl glass pr-2 pl-4 [--glass:var(--glass-header)] sm:pr-3 sm:pl-5">
         <Link
           href={pagePath(lang, "home")}
           aria-label={dict.common.homeLink}
