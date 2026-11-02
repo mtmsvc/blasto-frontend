@@ -94,6 +94,12 @@ or `categoryPath(lang, id)`, never by hand.
   page change open at the top; Next.js alone does not.
 - The theme dropdown is `modal={false}` so it does not lock page scroll.
 - Language switcher uses plain `<a>` links (full reload, new `<html lang>`).
+- Tests that click menus, the theme switcher or form choices must first wait
+  until the page is ready: `openReady(page, url)` from `tests/helpers.ts`
+  (waits for `html[data-ready]`, set by `ReadyMarker`). Clicking before the
+  JavaScript runs does nothing, which made a WebKit test fail at random.
+- The application form disables Send until it is ready, so an early click
+  cannot make the browser submit the form by itself (data in the URL).
 - Legal documents: the privacy policy is in the dictionaries; the internal
   rules are Latvian-only in `src/content/legal/rules-lv.ts`.
 - Content still to confirm with the school is marked `TODO(content)`

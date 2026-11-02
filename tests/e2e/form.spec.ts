@@ -6,6 +6,12 @@ import { SEND_QUESTIONS } from "@/components/apply/application";
 
 const FORM_URL = "/lv/pieteikums/";
 
+/** Opens the form and waits until its JavaScript is running. */
+async function openForm(page: Page, url = FORM_URL) {
+  await page.goto(url);
+  await expect(page.locator("form[data-ready]")).toBeVisible();
+}
+
 async function fillValidForm(page: Page) {
   await page.getByLabel("Vārds, uzvārds").fill("Jānis Tests");
   await page.getByLabel("Tālrunis").fill("+371 20 123 456");
@@ -29,7 +35,7 @@ const send = (page: Page) => page.getByRole("button", { name: "Nosūtīt pieteik
 const errorAlert = (page: Page) => page.getByRole("alert").filter({ hasText: "Pieteikumu" });
 
 test("sending an empty form shows errors and focuses the first field", async ({ page }) => {
-  await page.goto(FORM_URL);
+  await openForm(page);
   await send(page);
   await expect(page.getByText("Lūdzu, ieraksti vārdu un uzvārdu.")).toBeVisible();
   await expect(page.getByText("Lūdzu, izvēlies vismaz vienu kategoriju.")).toBeVisible();
@@ -37,7 +43,7 @@ test("sending an empty form shows errors and focuses the first field", async ({ 
 });
 
 test("on 201 the exact payload is sent and a thank-you is shown", async ({ page }) => {
-  await page.goto(FORM_URL);
+  await openForm(page);
   const sent = await mockBackend(page, 201);
   await fillValidForm(page);
   await send(page);
@@ -57,7 +63,7 @@ test("on 201 the exact payload is sent and a thank-you is shown", async ({ page 
 });
 
 test("server errors are shown in plain words with the status code", async ({ page }) => {
-  await page.goto(FORM_URL);
+  await openForm(page);
   await mockBackend(page, 500);
   await fillValidForm(page);
   await send(page);
@@ -66,7 +72,7 @@ test("server errors are shown in plain words with the status code", async ({ pag
 });
 
 test("a lost connection is explained", async ({ page }) => {
-  await page.goto(FORM_URL);
+  await openForm(page);
   await page.route("**/applications", (route) => route.abort());
   await fillValidForm(page);
   await send(page);
@@ -74,12 +80,12 @@ test("a lost connection is explained", async ({ page }) => {
 });
 
 test("?category= ticks that category", async ({ page }) => {
-  await page.goto("/ru/zayavka/?category=ce");
+  await openForm(page, "/ru/zayavka/?category=ce");
   await expect(page.getByRole("checkbox", { name: /^CE/ })).toBeChecked();
 });
 
 test("categories are listed like on the old form: B, A1/A2/A, AM…", async ({ page }) => {
-  await page.goto(FORM_URL);
+  await openForm(page);
   const labels = await page
     .locator("fieldset")
     .nth(1)
@@ -88,4 +94,18 @@ test("categories are listed like on the old form: B, A1/A2/A, AM…", async ({ p
       boxes.map((box) => box.closest("label")?.querySelector("span span")?.textContent),
     );
   expect(labels).toEqual(["B", "A1/A2/A", "AM", "BE", "C", "CE", "D", "95"]);
+});
+
+test("text typed before the page is ready is kept", async ({ page }) => {
+  // Simulates a slow device: type into the pre-built form, then let the
+  // JavaScript start. Nothing typed may be lost.
+  await page.route("**/_next/static/**/*.js", async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await route.continue();
+  });
+  await page.goto("/lv/pieteikums/?category=b");
+  await page.getByLabel("Vārds, uzvārds").fill("Ātrs Rakstītājs");
+  await expect(page.locator("form[data-ready]")).toBeVisible({ timeout: 15000 });
+  await expect(page.getByLabel("Vārds, uzvārds")).toHaveValue("Ātrs Rakstītājs");
+  await expect(page.getByRole("checkbox", { name: /^B / })).toBeChecked();
 });
