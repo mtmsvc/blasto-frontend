@@ -20,7 +20,17 @@ export default defineConfig({
     baseURL: "http://localhost:4173",
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // Chrome always. Firefox and Safari's engine (WebKit) on GitHub, or locally
+  // with ALL_BROWSERS=1 after `npx playwright install firefox webkit`.
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    ...(process.env.CI || process.env.ALL_BROWSERS
+      ? [
+          { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+          { name: "webkit", use: { ...devices["Desktop Safari"] } },
+        ]
+      : []),
+  ],
   webServer: {
     command: "npx serve out -l 4173 --no-clipboard",
     url: "http://localhost:4173/lv/",

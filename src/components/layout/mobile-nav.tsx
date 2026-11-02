@@ -44,7 +44,12 @@ export function MobileNav({ lang, items, apply, labels, className }: MobileNavPr
         </nav>
 
         <div className="mt-auto flex flex-col gap-4">
-          <LanguageSwitcher current={lang} label={labels.language} className="self-start" />
+          <LanguageSwitcher
+            current={lang}
+            label={labels.language}
+            landmark={false}
+            className="self-start"
+          />
           <Button asChild size="lg">
             <Link href={apply.href} onClick={close}>
               {apply.label}
