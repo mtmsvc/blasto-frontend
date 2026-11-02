@@ -15,7 +15,9 @@ function Label({ className, ...props }: React.ComponentProps<typeof LabelPrimiti
     <LabelPrimitive.Root
       data-slot="label"
       className={cn(
-        "flex items-center gap-2 text-sm leading-none font-medium",
+        // `cursor-auto`: browsers give labels an arrow cursor by default; this
+        // shows the normal text cursor, like on all other text.
+        "flex cursor-auto items-center gap-2 text-sm leading-none font-medium",
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-60",
         className,
       )}

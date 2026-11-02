@@ -57,35 +57,35 @@
 
   /* Quiet surfaces and secondary text */
   --muted: oklch(0.92 0.016 160);
-  --muted-foreground: oklch(0.44 0.025 165);
+  --muted-foreground: oklch(0.41 0.025 165);
 
   /* Hover/active backgrounds of menu items and ghost buttons */
   --accent: oklch(0.91 0.04 158);
   --accent-foreground: oklch(0.27 0.04 162);
 
   /* Errors */
-  --destructive: oklch(0.52 0.19 27);
+  --destructive: oklch(0.49 0.19 27);
   --destructive-foreground: oklch(0.99 0.005 160);
 
   /* Lines */
   --border: oklch(0.86 0.025 160); /* decorative dividers and card edges */
-  --input: oklch(0.58 0.03 160); /* form controls: ≥ 3:1 so fields are visible */
+  --input: oklch(0.55 0.03 160); /* form controls: ≥ 3:1 so fields are visible */
   --ring: oklch(0.52 0.1 160); /* keyboard focus outline */
 
   /* Decorative pastels (never for text) */
   --pastel: oklch(0.86 0.07 158);
-  --blob-1: oklch(0.84 0.09 155);
-  --blob-2: oklch(0.87 0.07 188);
-  --blob-3: oklch(0.91 0.08 118);
+  --blob-1: oklch(0.8 0.11 155);
+  --blob-2: oklch(0.84 0.09 190);
+  --blob-3: oklch(0.88 0.1 120);
 
   /* "Frosted glass" surfaces (see the `glass` utility below).
      --glass is the clearest part of the glass (used to check text
      contrast); --glass-sheen is the brighter light that fades across it. */
-  --glass: oklch(1 0 0 / 0.42);
-  --glass-sheen: oklch(1 0 0 / 0.38);
+  --glass: oklch(1 0 0 / 0.38);
+  --glass-sheen: oklch(1 0 0 / 0.5);
   --glass-border: oklch(1 0 0 / 0.75);
   --glass-highlight: oklch(1 0 0 / 0.95);
-  --glass-shadow: oklch(0.35 0.05 160 / 0.14);
+  --glass-shadow: oklch(0.35 0.05 160 / 0.2);
 }
 
 /* ---------- Dark theme ---------- */
