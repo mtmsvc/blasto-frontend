@@ -16,10 +16,10 @@ import { site } from "@/content/site";
  *   }
  *
  * The resulting hreflang tags look like:
- *   <link rel="alternate" hreflang="lv" href="https://blasto.lv/lv/courses/">
- *   <link rel="alternate" hreflang="ru" href="https://blasto.lv/ru/courses/">
- *   <link rel="alternate" hreflang="en" href="https://blasto.lv/en/categories/">
- *   <link rel="alternate" hreflang="x-default" href="https://blasto.lv/lv/courses/">
+ *   <link rel="alternate" hreflang="lv" href="https://blasto.me/lv/kategorijas/">
+ *   <link rel="alternate" hreflang="ru" href="https://blasto.me/ru/kategorii/">
+ *   <link rel="alternate" hreflang="en" href="https://blasto.me/en/categories/">
+ *   <link rel="alternate" hreflang="x-default" href="https://blasto.me/lv/kategorijas/">
  * (URLs become absolute thanks to `metadataBase` in the [lang] layout.)
  */
 export function pageMetadata({

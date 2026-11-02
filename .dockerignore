@@ -1,9 +1,0 @@
-# Not needed inside the image (keeps builds fast and small)
-node_modules
-.next
-out
-.git
-test-results
-playwright-report
-*.md
-!README.md

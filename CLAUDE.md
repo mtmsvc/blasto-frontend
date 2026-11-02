@@ -57,7 +57,7 @@ version notes:
 | Design tokens, glass effect                     | `src/app/globals.css`                                                                   |
 | Routes                                          | `src/app/[lang]/page.tsx` (home), `src/app/[lang]/[...path]/page.tsx` (everything else) |
 | Tests                                           | `tests/unit/`, `tests/e2e/`                                                             |
-| Deployment (Docker + Caddy)                     | `Dockerfile`, `deploy/`                                                                 |
+| Deployment (static files, Caddy)                | `deploy/README.md`                                                                      |
 
 ## How routing works (important)
 
@@ -102,8 +102,7 @@ or `categoryPath(lang, id)`, never by hand.
   cannot make the browser submit the form by itself (data in the URL).
 - Glass: all cards use the `glass` utility. The header is the same glass,
   less see-through: it overrides `--glass` with `--glass-header` on its own
-  element. The light under the mouse is `GlassSpotlight` + CSS in the
-  `glass` utility (`data-spot`, `--spot-x/y`, registered `--spot-color`).
+  element.
 - Legal documents: the privacy policy is in the dictionaries; the internal
   rules are Latvian-only in `src/content/legal/rules-lv.ts`.
 - Content still to confirm with the school is marked `TODO(content)`
