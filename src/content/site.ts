@@ -21,9 +21,9 @@ export const site = {
   /**
    * Public address of the website, used for canonical URLs, hreflang tags
    * and the sitemap. Can be overridden at build time:
-   *   NEXT_PUBLIC_SITE_URL=https://staging.blasto.lv npm run build
+   *   NEXT_PUBLIC_SITE_URL=https://staging.blasto.me npm run build
    */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blasto.lv",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://blasto.me",
 
   legalName: "SIA “BLASTO”",
   registrationNumber: "40203287655",
@@ -224,6 +224,13 @@ export const googleReviews = {
   count: 19,
   url: site.mapUrl,
 } as const;
+
+/**
+ * Show the quoted reviews below on the home page?
+ * `false`: only the overall Google rating and the link to all reviews are
+ * shown. Set to `true` to show the quotes again (the data stays here).
+ */
+export const showReviewQuotes = false;
 
 /**
  * A few reviews from Google, quoted word for word in their original

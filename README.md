@@ -75,29 +75,17 @@ npm run preview
 
 Then open http://localhost:3000.
 
-The site address used in canonical links, hreflang tags and the sitemap is `https://blasto.lv`. For another domain (e.g. a staging server), set it when building:
+The site address used in canonical links, hreflang tags and the sitemap is `https://blasto.me`. For another domain (e.g. a staging server), set it when building:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://staging.blasto.lv npm run build
+NEXT_PUBLIC_SITE_URL=https://staging.blasto.me npm run build
 ```
 
 ### Deploying
 
-The production setup (Docker image + Caddy, for the Azure VM) is described
-step by step in **[deploy/README.md](deploy/README.md)**. In short:
-
-```bash
-docker compose -f deploy/docker-compose.yml up -d --build
-```
-
-builds the site into a small Caddy container that also handles the 404 page
-and the redirects from the old blasto.lv addresses
-(`deploy/redirects.caddy`). The server's main Caddy adds HTTPS and forwards
-`/applications` to the backend.
-
-Any other web server works too: serve the `out/` folder, forward
-`POST /applications` to the backend, use `404.html` for missing pages, and
-redirect `/` to `/lv/`.
+The site is served as static files by an existing Caddy server at
+blasto.me: build with `npm run build` and copy the contents of `out/` to
+the server. See [deploy/README.md](deploy/README.md).
 
 ---
 
@@ -172,8 +160,7 @@ tests/
 ├── e2e/                        Browser tests: every page, form, theme, navigation, layout
 └── helpers.ts                  List of all page URLs, shared helpers
 
-deploy/                         Docker + Caddy setup for the server (see deploy/README.md)
-Dockerfile                      Builds the production image
+deploy/                         Deployment notes + redirects for later (see deploy/README.md)
 CLAUDE.md                       Rules and map of the project for AI assistants
 .github/workflows/ci.yml        Runs all checks and tests on GitHub on every push
 ```
@@ -201,7 +188,7 @@ The first aid course, the medical certificate and the CSDD state fees are in `ex
 
 ### Update the reviews
 
-The quotes and the Google rating are at the bottom of `src/content/site.ts`. Copy reviews word for word from Google, in their original language, and set `lang` to that language. Update `count` from time to time.
+The quotes and the Google rating are at the bottom of `src/content/site.ts`. The quotes are currently hidden: set `showReviewQuotes = true` there to show them again (the rating and the link to all Google reviews are always shown). Copy reviews word for word from Google, in their original language, and set `lang` to that language. Update `count` from time to time.
 
 ### Edit the legal documents
 
@@ -333,8 +320,7 @@ time on a new computer: `npx playwright install chromium`.) To re-run the
 tests without rebuilding: `npm run test:only`.
 
 The same checks run automatically on GitHub for every push
-(`.github/workflows/ci.yml`), together with a test build of the Docker
-image.
+(`.github/workflows/ci.yml`).
 
 `npm run check` runs all of the following in one go:
 

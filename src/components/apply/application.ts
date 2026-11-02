@@ -5,7 +5,7 @@
 
 import { categoryIds, type CategoryId } from "@/content/site";
 
-/** Where the form is sent. Same origin as the site: https://blasto.lv/applications */
+/** Where the form is sent. Same origin as the site: https://blasto.me/applications */
 export const APPLICATIONS_ENDPOINT = "/applications";
 
 /** How long to wait for the server before showing a network error. */

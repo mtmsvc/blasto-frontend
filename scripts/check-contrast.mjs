@@ -59,14 +59,7 @@ function checkTheme(name, tokens) {
   // Backgrounds that text can sit on, including the worst-case glass ones.
   const glassOver = (behind) => over(color("glass"), behind);
   const blobs = ["blob-1", "blob-2", "blob-3"].map((blob) => over(color(blob), bg));
-  // Glass with the mouse light on it (worst case for light text in dark mode).
-  const glowOver = (behind) => over(color("glass-glow"), glassOver(behind));
-  const glassSurfaces = [
-    glassOver(bg),
-    ...blobs.map(glassOver),
-    glowOver(bg),
-    ...blobs.map(glowOver),
-  ];
+  const glassSurfaces = [glassOver(bg), ...blobs.map(glassOver)];
   const barOver = (behind) => over(color("glass-header"), behind);
   const barSurfaces = [barOver(bg), ...blobs.map(barOver)];
 

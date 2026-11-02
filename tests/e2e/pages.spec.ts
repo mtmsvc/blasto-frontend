@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import { site } from "@/content/site";
+
 import { allUrls, collectConsoleErrors } from "../helpers";
 
 /** Every page loads, has the basics right, and logs no errors. */
@@ -15,6 +17,11 @@ for (const { lang, url } of allUrls) {
     await expect(page).toHaveTitle(/Blasto/);
     // Canonical URL + one hreflang link per language + x-default.
     await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    // Absolute URLs use the site address (https://blasto.me by default).
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      new URL(url, site.url).toString(),
+    );
     await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(4);
     expect(errors).toEqual([]);
   });

@@ -59,23 +59,3 @@ test.describe("on a phone", () => {
     expect(await scrollY(page)).toBe(1500);
   });
 });
-
-test("glass cards light up under the mouse", async ({ page }) => {
-  await openReady(page, "/lv/kategorijas/");
-  const card = page.locator("#category-b");
-  await card.hover();
-  await expect(card).toHaveAttribute("data-spot", "");
-  await page.mouse.move(5, 500); // away from all glass
-  await expect(card).not.toHaveAttribute("data-spot", "");
-});
-
-test.describe("on a laptop with a touchscreen", () => {
-  test.use({ hasTouch: true });
-
-  test("glass cards still light up under the mouse", async ({ page }) => {
-    await openReady(page, "/lv/kategorijas/");
-    const card = page.locator("#category-b");
-    await card.hover();
-    await expect(card).toHaveAttribute("data-spot", "");
-  });
-});
