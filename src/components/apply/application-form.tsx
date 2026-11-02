@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { CircleAlertIcon, CircleCheckIcon, LoaderCircleIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,8 +34,6 @@ export type ApplicationFormProps = {
   texts: Pick<Dictionary["apply"], "form" | "errors" | "result">;
   /** Categories in display order, with their translated names. */
   categories: { id: CategoryId; label: string; name: string }[];
-  /** A category to tick in advance (from a "?category=b" link). */
-  initialCategory?: CategoryId;
   /** Link to the privacy policy, shown under the Send button. */
   privacyHref: string;
 };
@@ -66,14 +63,13 @@ const FIELD_ORDER: FieldName[] = ["name", "phone", "email", "trainingType", "cat
  *    focus. Otherwise the data is sent and a success or error message is
  *    shown.
  */
-export function ApplicationForm({
-  texts,
-  categories,
-  initialCategory,
-  privacyHref,
-}: ApplicationFormProps) {
+export function ApplicationForm({ texts, categories, privacyHref }: ApplicationFormProps) {
   const id = useId(); // unique prefix for the ids that link labels and fields
-  const [values, setValues] = useState<FormValues>(() => emptyValues(initialCategory));
+  const [values, setValues] = useState<FormValues>(() => emptyValues());
+  // False in the pre-built HTML, true once JavaScript is running. Until
+  // then the Send button is disabled: otherwise an early click would make
+  // the browser submit the form by itself, putting the data in the URL.
+  const [ready, setReady] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
   const [status, setStatus] = useState<Status>({ state: "idle" });
   // Which field to focus after the next render (a new object each time, so
@@ -88,6 +84,23 @@ export function ApplicationForm({
   /** Translated error text for a field, or undefined if it should not show. */
   const errorFor = (field: FieldName) =>
     showErrors && errors[field] ? texts.errors[errors[field]] : undefined;
+
+  // Once JavaScript runs: tick the category from a "?category=b" link,
+  // without touching anything the visitor may have typed already.
+  useEffect(() => {
+    const category = findCategory(new URLSearchParams(window.location.search).get("category"));
+    // Setting state in an effect is intended here: the URL is only known in
+    // the browser, after the pre-built HTML has loaded.
+    /* eslint-disable react-hooks/set-state-in-effect */
+    if (category) {
+      setValues((current) => ({
+        ...current,
+        categories: { ...current.categories, [category.id]: true },
+      }));
+    }
+    setReady(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, []);
 
   // Focus is moved *after* rendering, so screen readers already hear the
   // field's error message when they land on it.
@@ -180,7 +193,12 @@ export function ApplicationForm({
   return (
     // `noValidate` turns off the browser's own pop-up messages, so ours
     // (translated, and readable by screen readers) are shown instead.
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-7">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      data-ready={ready || undefined}
+      className="flex flex-col gap-7"
+    >
       <p className="text-sm text-muted-foreground">{texts.form.allRequired}</p>
 
       {/* Name */}
@@ -366,7 +384,7 @@ export function ApplicationForm({
 
       <div className="flex flex-col gap-4 border-t border-border pt-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Button type="submit" size="lg" disabled={sending} className="w-full sm:w-auto">
+          <Button type="submit" size="lg" disabled={sending || !ready} className="w-full sm:w-auto">
             {sending && <LoaderCircleIcon className="animate-spin" aria-hidden />}
             {sending ? texts.form.sending : texts.form.submit}
           </Button>
@@ -384,20 +402,6 @@ export function ApplicationForm({
       </div>
     </form>
   );
-}
-
-/**
- * Same form, but ticks the category from the URL (`?category=b`).
- *
- * Reading the URL is only possible in the browser, so the page wraps this
- * component in <Suspense>, with the plain <ApplicationForm> as fallback: the
- * static HTML contains the full form, and the category is ticked as soon as
- * JavaScript runs.
- */
-export function ApplicationFormFromUrl(props: Omit<ApplicationFormProps, "initialCategory">) {
-  const searchParams = useSearchParams();
-  const category = findCategory(searchParams.get("category"));
-  return <ApplicationForm {...props} initialCategory={category?.id} />;
 }
 
 /* ------------------------------------------------------------------ */

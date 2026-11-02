@@ -1,13 +1,8 @@
-import { Suspense } from "react";
 import { PhoneIcon } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Container } from "@/components/layout/container";
-import {
-  ApplicationForm,
-  ApplicationFormFromUrl,
-  type ApplicationFormProps,
-} from "@/components/apply/application-form";
+import { ApplicationForm, type ApplicationFormProps } from "@/components/apply/application-form";
 import { PageHeader } from "@/components/sections/page-header";
 import { applicationFormOrder, findCategory, phoneHref, site } from "@/content/site";
 import { pagePath } from "@/i18n/routes";
@@ -18,7 +13,7 @@ export function ApplyPage({ lang, dict }: PageViewProps) {
   const { aside } = dict.apply;
 
   // Only the texts the form needs are sent to the browser.
-  const formProps: Omit<ApplicationFormProps, "initialCategory"> = {
+  const formProps: ApplicationFormProps = {
     texts: { form: dict.apply.form, errors: dict.apply.errors, result: dict.apply.result },
     // In the order and with the labels of the form (see site.ts).
     categories: applicationFormOrder.flatMap((id) => {
@@ -37,9 +32,8 @@ export function ApplyPage({ lang, dict }: PageViewProps) {
 
       <Container className="grid items-start gap-6 lg:grid-cols-[1fr_20rem]">
         <Card className="p-6 sm:p-10">
-          <Suspense fallback={<ApplicationForm {...formProps} />}>
-            <ApplicationFormFromUrl {...formProps} />
-          </Suspense>
+          {/* Ticks the category from a "?category=b" link by itself. */}
+          <ApplicationForm {...formProps} />
         </Card>
 
         <aside

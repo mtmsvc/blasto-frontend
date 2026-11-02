@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-import { scrollTo, scrollY } from "../helpers";
+import { openReady, scrollTo, scrollY } from "../helpers";
 
 /** Light/dark theme: switching, remembering, no flash, no page jump. */
 
@@ -13,7 +13,7 @@ const isDark = (page: Page) =>
   page.evaluate(() => document.documentElement.classList.contains("dark"));
 
 test("choosing Dark switches the theme and it is remembered", async ({ page }) => {
-  await page.goto("/lv/");
+  await openReady(page, "/lv/");
   await chooseTheme(page, "Tumšā");
   await expect.poll(() => isDark(page)).toBe(true);
 
@@ -28,6 +28,7 @@ test("choosing Dark switches the theme and it is remembered", async ({ page }) =
     });
   });
   await page.reload();
+  await page.locator("html[data-ready]").waitFor({ state: "attached" });
   expect(await page.evaluate(() => (window as unknown as { darkEarly: boolean }).darkEarly)).toBe(
     true,
   );
@@ -37,7 +38,7 @@ test("choosing Dark switches the theme and it is remembered", async ({ page }) =
 });
 
 test("switching the theme does not move the page", async ({ page }) => {
-  await page.goto("/lv/");
+  await openReady(page, "/lv/");
   await scrollTo(page, 1200);
   await chooseTheme(page, "Tumšā");
   await page.waitForTimeout(700); // let the animation finish
@@ -48,7 +49,7 @@ test.describe("on a phone", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test("opening and closing the menu does not move the page", async ({ page }) => {
-    await page.goto("/lv/");
+    await openReady(page, "/lv/");
     await scrollTo(page, 1500);
     await page.getByRole("button", { name: "Atvērt izvēlni" }).click();
     await page.keyboard.press("Escape");

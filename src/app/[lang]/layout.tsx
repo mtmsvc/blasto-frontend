@@ -5,6 +5,7 @@ import { BackgroundDecor } from "@/components/layout/background-decor";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ScrollToTop } from "@/components/layout/scroll-to-top";
+import { ReadyMarker } from "@/components/layout/ready-marker";
 import { getDictionary } from "@/dictionaries";
 import { locales } from "@/i18n/config";
 import { getLocale } from "@/i18n/params";
@@ -76,6 +77,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         </main>
         <SiteFooter lang={lang} dict={dict} />
         <ScrollToTop />
+        <ReadyMarker />
       </body>
     </html>
   );

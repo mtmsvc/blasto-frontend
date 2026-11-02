@@ -34,7 +34,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "culori": "^4.0.2",
-    "eslint": "^9",
+    "eslint": "^10.14.0",
     "eslint-config-next": "16.4.3",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
@@ -45,5 +45,8 @@
   },
   "engines": {
     "node": ">=20.9.0"
+  },
+  "overrides": {
+    "compression": "^1.8.2"
   }
 }

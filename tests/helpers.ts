@@ -14,6 +14,16 @@ export const allUrls: { lang: Locale; url: string }[] = locales.flatMap((lang) =
   ...categoryIds.map((id) => ({ lang, url: categoryPath(lang, id) })),
 ]);
 
+/**
+ * Opens a page and waits until its JavaScript is running (the
+ * `data-ready` marker on <html>, see ReadyMarker). Use it before clicking
+ * menus, the theme switcher or form choices.
+ */
+export async function openReady(page: Page, url: string) {
+  await page.goto(url);
+  await page.locator("html[data-ready]").waitFor({ state: "attached" });
+}
+
 /** Collects console errors of a page, to assert that there are none. */
 export function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
