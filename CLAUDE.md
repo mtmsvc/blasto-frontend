@@ -100,6 +100,10 @@ or `categoryPath(lang, id)`, never by hand.
   JavaScript runs does nothing, which made a WebKit test fail at random.
 - The application form disables Send until it is ready, so an early click
   cannot make the browser submit the form by itself (data in the URL).
+- Glass: all cards use the `glass` utility. The header is the same glass,
+  less see-through: it overrides `--glass` with `--glass-header` on its own
+  element. The light under the mouse is `GlassSpotlight` + CSS in the
+  `glass` utility (`data-spot`, `--spot-x/y`, registered `--spot-color`).
 - Legal documents: the privacy policy is in the dictionaries; the internal
   rules are Latvian-only in `src/content/legal/rules-lv.ts`.
 - Content still to confirm with the school is marked `TODO(content)`
