@@ -29,7 +29,7 @@ jobs:
           path: test-results/
           retention-days: 7
   deploy:
-    needs: checks-and-tests                       # only after all checks and tests pass
+    needs: checks-and-tests # only after all checks and tests pass
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build                        # writes the static site to out/
+      - run: npm run build # writes the static site to out/
       - name: Copy to server
         run: |
           mkdir -p ~/.ssh
