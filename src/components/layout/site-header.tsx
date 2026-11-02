@@ -24,7 +24,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 sm:px-4">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 rounded-2xl glass pr-2 pl-4 sm:pr-3 sm:pl-5">
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 rounded-2xl glass-bar pr-2 pl-4 sm:pr-3 sm:pl-5">
         <Link
           href={pagePath(lang, "home")}
           aria-label={dict.common.homeLink}
