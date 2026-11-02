@@ -96,9 +96,10 @@ test("categories are listed like on the old form: B, A1/A2/A, AM…", async ({ p
   expect(labels).toEqual(["B", "A1/A2/A", "AM", "BE", "C", "CE", "D", "95"]);
 });
 
-test("text typed before the page is ready is kept", async ({ page }) => {
-  // Simulates a slow device: type into the pre-built form, then let the
-  // JavaScript start. Nothing typed may be lost.
+test("text typed before the page is ready is kept and sent", async ({ page }) => {
+  // Simulates a slow device: type into the pre-built form while the
+  // JavaScript is still loading. Nothing typed may be lost (Safari used to
+  // erase it), and it must be what gets sent.
   await page.route("**/_next/static/**/*.js", async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     await route.continue();
@@ -108,4 +109,12 @@ test("text typed before the page is ready is kept", async ({ page }) => {
   await expect(page.locator("form[data-ready]")).toBeVisible({ timeout: 15000 });
   await expect(page.getByLabel("Vārds, uzvārds")).toHaveValue("Ātrs Rakstītājs");
   await expect(page.getByRole("checkbox", { name: /^B / })).toBeChecked();
+
+  const sent = await mockBackend(page, 201);
+  await page.getByLabel("Tālrunis").fill("+371 20 123 456");
+  await page.getByLabel("E-pasts").fill("janis@example.lv");
+  await page.getByRole("radio", { name: /Klātienē/ }).click();
+  await send(page);
+  await expect(page.getByRole("heading", { name: "Paldies! Pieteikums saņemts." })).toBeVisible();
+  expect(sent.body).toMatchObject({ name: "Ātrs Rakstītājs", cat_b: true });
 });
