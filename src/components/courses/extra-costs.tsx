@@ -52,7 +52,7 @@ export function ExtraCosts({ lang, texts }: { lang: Locale; texts: Texts }) {
         </h2>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {groups.map((group) => (
-            <Card key={group.title} glass className="gap-5">
+            <Card key={group.title} className="gap-5">
               <div className="flex items-start gap-4">
                 <IconBubble icon={group.icon} />
                 <div>

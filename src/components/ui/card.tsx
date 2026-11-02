@@ -3,14 +3,15 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Card (shadcn/ui), with an optional glass look.
+ * Card (shadcn/ui). All cards on the site are frosted glass, so the look is
+ * consistent; `glass={false}` gives a solid surface where one is needed.
  *
- *   <Card>…</Card>        solid surface
- *   <Card glass>…</Card>  frosted, semi-transparent surface
+ *   <Card>…</Card>              frosted, semi-transparent surface
+ *   <Card glass={false}>…</Card> solid surface
  */
 function Card({
   className,
-  glass = false,
+  glass = true,
   ...props
 }: React.ComponentProps<"div"> & { glass?: boolean }) {
   return (

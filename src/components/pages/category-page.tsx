@@ -93,7 +93,7 @@ export function CategoryPage({ lang, dict, category }: PageViewProps & { categor
           aria-labelledby="costs-title"
           className="lg:sticky lg:top-28 lg:col-start-2 lg:row-start-1"
         >
-          <Card glass className="gap-5">
+          <Card className="gap-5">
             <h2 id="costs-title" className="text-lg font-semibold">
               {texts.costs}
             </h2>

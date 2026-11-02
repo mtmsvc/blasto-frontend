@@ -68,7 +68,16 @@ export function ThemeToggle({ labels }: { labels: Dictionary["common"]["theme"] 
           <MoonIcon className="hidden size-5 dark:block" aria-hidden />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        align="end"
+        // When the menu closes, focus goes back to the button. Some browsers
+        // scroll the page to "show" a focused element, even one in the
+        // sticky header; `preventScroll` makes sure the page never moves.
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          buttonRef.current?.focus({ preventScroll: true });
+        }}
+      >
         <DropdownMenuLabel>{labels.label}</DropdownMenuLabel>
         <DropdownMenuRadioGroup
           value={preference}

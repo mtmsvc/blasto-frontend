@@ -34,7 +34,7 @@ export function CoursesPage({ lang, dict }: PageViewProps) {
           <h2 id="notes-title" className="text-2xl font-semibold tracking-tight">
             {notes.title}
           </h2>
-          <Card glass className="mt-6">
+          <Card className="mt-6">
             <ul className="flex flex-col gap-4">
               {notes.items.map((note) => (
                 <li key={note} className="flex items-start gap-3">

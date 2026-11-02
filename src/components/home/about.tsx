@@ -44,7 +44,7 @@ export function About({ dict }: { dict: Dictionary }) {
           </h3>
           <ul className="mt-5 grid gap-4 sm:grid-cols-2">
             {(Object.keys(benefits.items) as BenefitKey[]).map((key) => (
-              <li key={key} className="flex gap-4 rounded-2xl border border-border bg-card p-5">
+              <li key={key} className="flex gap-4 rounded-2xl glass p-5">
                 <IconBubble icon={benefitIcons[key]} />
                 <div>
                   <h4 className="font-semibold">{benefits.items[key].title}</h4>

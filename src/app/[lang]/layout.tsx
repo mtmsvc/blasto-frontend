@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 export const viewport: Viewport = {
   // Browser UI color on phones; matches the --background token.
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7fbf9" },
+    { media: "(prefers-color-scheme: light)", color: "#e4f0e9" },
     { media: "(prefers-color-scheme: dark)", color: "#0b110e" },
   ],
 };
