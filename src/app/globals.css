@@ -199,14 +199,14 @@
 @utility glass {
   background-color: var(--glass);
   /* Two layers of light:
-     1. a soft spot under the mouse (only while hovered; GlassSpotlight in
+     1. a soft spot under the mouse, 110px in radius (only while hovered; GlassSpotlight in
         src/components/layout/glass-spotlight.tsx sets its position and
         turns it on), and
      2. a diagonal sheen, brightest in the top-left corner, like light
         falling on frosted glass. */
   background-image:
     radial-gradient(
-      340px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      110px circle at var(--spot-x, 50%) var(--spot-y, 50%),
       var(--spot-color),
       transparent 70%
     ),
